@@ -6,6 +6,8 @@
 #include <string.h>
 
 #include <dirent.h>
+#include <sys/stat.h>
+
 #include <pthread.h>
 #include <unistd.h>
 
@@ -16,6 +18,9 @@ void init_logger(LogDate date) {
   time(&t);
   char dateBuf[255];
   strftime(dateBuf, sizeof(dateBuf), "%a %b %d %H:%M:%S %Y", localtime(&t));
+  // FIXME
+  ASSERT(mkdir("../logs/session", 0777) == 0,
+         "Couldn't create directory for logging...\n");
 
   char *type;
   char logPath[300];
@@ -32,8 +37,8 @@ void init_logger(LogDate date) {
     struct dirent *dir;
     d = opendir("../logs/session");
     if (d) {
-      while (dir = readdir(d))
-        ASSERT(strcmp(dir->d_name, logPath) != 0, "Logger already exists");
+      while ((dir = readdir(d)) != NULL)
+        ASSERT(strcmp(dir->d_name, logPath) != 0, "Logger already exists\n");
       closedir(d);
     }
 

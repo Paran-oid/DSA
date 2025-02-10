@@ -23,10 +23,13 @@ typedef ssize_t isize;
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+// We are using while 0 to prevent buggy code with if-else
 #define ASSERT(_e, ...)                                                        \
-  if (!(_e)) {                                                                 \
-    fprintf(stderr, __VA_ARGS__);                                              \
-    exit(EXIT_FAILURE);                                                        \
-  }
+  do {                                                                         \
+    if (!(_e)) {                                                               \
+      fprintf(stderr, __VA_ARGS__);                                            \
+      exit(EXIT_FAILURE);                                                      \
+    }                                                                          \
+  } while (0)
 
 void swap(void *arg1, void *arg2, usize item_size);

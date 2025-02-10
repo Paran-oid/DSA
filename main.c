@@ -1,6 +1,6 @@
 #include "funcs.h"
 #include "logs.h"
-#include "lstack.h"
+#include "queue.h"
 
 #include <limits.h>
 #include <stdio.h>
@@ -8,12 +8,14 @@
 
 int main(void) {
 
+  // FIXME
   init_logger(ALL);
 
-  LStack *mystack = init_lstack(3);
-  print_lstack(mystack);
+  Queue myqueue = init_queue();
+  enqeue_queue(&myqueue, 5);
+  peek_queue(&myqueue);
+  print_queue(&myqueue);
 
-  destroy_lstack(mystack);
   destroy_logger();
 
   exit(EXIT_SUCCESS);

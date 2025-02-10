@@ -12,7 +12,9 @@ set(SRC
   src/sorting.c
   src/stack.c
   src/lstack.c
-  src/logs.c)
+  src/logs.c
+  src/queue.c
+  )
 
 set(INCLUDE 
   include
