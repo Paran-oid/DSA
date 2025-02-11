@@ -78,8 +78,10 @@ Matrix add_mat(Matrix *mat1, Matrix *mat2) {
 }
 
 Matrix mult_mat(Matrix *mat1, Matrix *mat2) {
-  if (mat1->rows != mat2->cols) {
-  }
+  ASSERT(mat1->rows == mat2->cols,
+         "Inputed Matrixes for multiplication must have the numbers of the "
+         "first's rows same as second's columns");
+
   Matrix res = init_mat(mat1->cols, mat2->rows);
   for (size_t k = 0; k < mat1->cols; k++) {
     for (size_t i = 0; i < mat1->cols; i++) {
