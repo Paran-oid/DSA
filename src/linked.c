@@ -1,15 +1,17 @@
 #include "linked.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-ListNode *init_node(int val) {
+ListNode *init_node(i32 val) {
   ListNode *head = malloc(sizeof(ListNode));
   head->val = val;
   head->next = NULL;
   return head;
 }
 void print_list(ListNode *head) {
+  printf("{");
   while (head) {
     if (head->next) {
       printf("%d->", head->val);
@@ -18,14 +20,22 @@ void print_list(ListNode *head) {
     }
     head = head->next;
   }
+  printf("}");
+}
+void destroy_node(ListNode *node) {
+  while (node != NULL) {
+    ListNode *temp = node;
+    node = node->next;
+    free(temp);
+  }
 }
 
-void begin_insert__node(ListNode **head, int val) {
+void begin_insert__node(ListNode **head, i32 val) {
   ListNode *newHead = init_node(val);
   newHead->next = *head;
   *head = newHead;
 }
-void end_insert_node(ListNode *head, int val) {
+void end_insert_node(ListNode *head, i32 val) {
   ListNode *newNode = init_node(val);
 
   ListNode *curr = head;
@@ -35,7 +45,7 @@ void end_insert_node(ListNode *head, int val) {
 
   curr->next = newNode;
 }
-void pos_insert_node(ListNode **head, int pos, int val) {
+void pos_insert_node(ListNode **head, usize pos, i32 val) {
   ListNode *prev = NULL;
   ListNode *curr = *head;
   while (pos > 0 && curr->next) {
@@ -70,7 +80,7 @@ void end_delete_node(ListNode *head) {
   prev->next = NULL;
 }
 
-void pos_delete_node(ListNode **head, int pos) {
+void pos_delete_node(ListNode **head, usize pos) {
   ListNode *curr = *head;
   ListNode *prev = NULL;
   while (pos > 0 && curr->next) {

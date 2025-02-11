@@ -1,20 +1,18 @@
 #include "funcs.h"
 #include "logs.h"
-#include "queue.h"
+#include "matrix.h"
 
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(void) {
 
-  // FIXME
   init_logger(ALL);
 
-  Queue myqueue = init_queue();
-  enqeue_queue(&myqueue, 5);
-  peek_queue(&myqueue);
-  print_queue(&myqueue);
+  Matrix mat = init_mat(3, 3);
+  i32 arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  fill_mat(&mat, arr, sizeof(arr) / sizeof(arr[0]));
+  print_mat(&mat);
 
   destroy_logger();
 

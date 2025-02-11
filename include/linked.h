@@ -1,21 +1,23 @@
 #pragma once
 
+#include "funcs.h"
+
 #include <stdbool.h>
 
 // SINGLE LINKED LIST
 // CIRCULAR LINKED LIST
 
 typedef struct ListNode {
-  int val;
+  i32 val;
   struct ListNode *next;
 } ListNode;
 
 // DOUBLY LINKED LIST
-typedef struct Node {
-  int val;
+typedef struct MultiListNode {
+  i32 val;
   struct Node *next;
   struct Node *prev;
-} Node;
+} MultiListNode;
 
 /*
   All of these functions apply for Circular and singly linked list
@@ -23,18 +25,17 @@ typedef struct Node {
   too repetitive
 */
 
-ListNode *init_node(int val);
+ListNode *init_node(i32 val);
 void print_list(ListNode *head);
-// TODO
 void destroy_node(ListNode *node);
 
-void begin_insert__node(ListNode **head, int val);
-void end_insert_node(ListNode *head, int val);
-void pos_insert_node(ListNode **head, int pos, int val);
+void begin_insert__node(ListNode **head, i32 val);
+void end_insert_node(ListNode *head, i32 val);
+void pos_insert_node(ListNode **head, usize pos, i32 val);
 
 void begin_delete_node(ListNode **head);
 void end_delete_node(ListNode *head);
-void pos_delete_node(ListNode **head, int pos);
+void pos_delete_node(ListNode **head, usize pos);
 
 // LEETCODE SECTION
 ListNode *reverse_list(ListNode *head);

@@ -4,18 +4,49 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Matrix init_mat(int rows, int cols) {
+Matrix init_mat(usize rows, usize cols) {
 
   Matrix mat;
 
   mat.rows = rows;
   mat.cols = cols;
 
-  mat.items = malloc(sizeof(int *) * mat.rows);
+  mat.items = malloc(sizeof(i32 *) * mat.rows);
   for (size_t i = 0; i < mat.rows; i++) {
-    mat.items[i] = malloc(sizeof(int) * mat.cols);
+    mat.items[i] = malloc(sizeof(i32) * mat.cols);
   }
   return mat;
+}
+
+void fill_mat(Matrix *mat, i32 *arr, usize n) {
+  usize k = 0;
+  ASSERT(n <= (mat->rows * mat->cols),
+         "Can't fill matrix with this array...\n");
+  for (usize i = 0; i < mat->rows; i++) {
+    for (usize j = 0; j < mat->cols; j++) {
+      mat->items[i][j] = arr[k++];
+    }
+  }
+}
+
+void print_mat(Matrix *mat) {
+  printf("{\n ");
+  for (usize i = 0; i < mat->rows; i++) {
+    printf("{");
+    for (usize j = 0; j < mat->cols; j++) {
+      if (j == mat->cols - 1) {
+        printf("%d", mat->items[i][j]);
+      } else {
+        printf("%d, ", mat->items[i][j]);
+      }
+    }
+    if (i != mat->rows - 1)
+      printf("},\n ");
+    else {
+      printf("}\n");
+    }
+  }
+  printf("}");
 }
 
 void destroy_mat(Matrix *mat) {

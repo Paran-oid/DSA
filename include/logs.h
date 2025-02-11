@@ -1,5 +1,7 @@
 #pragma once
 
+#include "funcs.h"
+
 #include <pthread.h>
 #include <stdio.h>
 
@@ -18,5 +20,5 @@ static Logger logger;
 #define DANGER(message) (log_message(logDanger, __FILE__, __LINE__, message))
 
 void init_logger(LogDate date);
-void log_message(LogType type, char *file, int line, char *mess);
+void log_message(LogType type, char *file, i32 line, char *mess);
 void destroy_logger(void);

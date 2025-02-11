@@ -6,7 +6,8 @@ this library contains everything related to the topic "Data Structures and Algor
 
 - functions macros like MIN, MAX, ASSERT can be found in func.h
 - logging related code exists in logs directory
-- third
+- Bewary of dangling pointers, after destroying a queue/array please
+  assign your pointers to NULL
 
 ## Logger
 

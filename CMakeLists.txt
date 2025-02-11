@@ -14,6 +14,7 @@ set(SRC
   src/lstack.c
   src/logs.c
   src/queue.c
+  src/lqueue.c
   )
 
 set(INCLUDE 

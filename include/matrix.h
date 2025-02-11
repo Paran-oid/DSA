@@ -1,15 +1,17 @@
 #pragma once
 
+#include "funcs.h"
+
 #include <stddef.h>
 
 typedef struct {
   size_t cols;
   size_t rows;
-  int **items;
+  i32 **items;
 } Matrix;
 
-Matrix init_mat(int rows, int cols);
-// TODO
+Matrix init_mat(usize rows, usize cols);
+void fill_mat(Matrix *mat, i32 *arr, usize n);
 void print_mat(Matrix *mat);
 void destroy_mat(Matrix *mat);
 

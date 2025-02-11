@@ -18,12 +18,9 @@ void init_logger(LogDate date) {
   time(&t);
   char dateBuf[255];
   strftime(dateBuf, sizeof(dateBuf), "%a %b %d %H:%M:%S %Y", localtime(&t));
-  // FIXME
-  ASSERT(mkdir("../logs/session", 0777) == 0,
-         "Couldn't create directory for logging...\n");
 
   char *type;
-  char logPath[300];
+  char logPath[1000];
 
   if (date == ALL) {
     snprintf(logPath, sizeof(logPath), "../logs/all-logs.txt");
@@ -31,27 +28,29 @@ void init_logger(LogDate date) {
   } else if (date == SESSION) {
     snprintf(logPath, sizeof(logPath), "../logs/session/[%s]-logs.txt",
              dateBuf);
-
-    // if the file exists don't do create a file
-    DIR *d;
-    struct dirent *dir;
-    d = opendir("../logs/session");
-    if (d) {
-      while ((dir = readdir(d)) != NULL)
-        ASSERT(strcmp(dir->d_name, logPath) != 0, "Logger already exists\n");
-      closedir(d);
-    }
-
-    if (access(logPath, F_OK) == 0) {
-      type = "a";
-    } else {
-      type = "w";
-    }
   }
+  DIR *d;
+  struct dirent *dir;
+  d = opendir("../logs/session");
+  if (d) {
+    while ((dir = readdir(d)) != NULL)
+      ASSERT(strcmp(dir->d_name, logPath) != 0, "Logger already exists\n");
+    closedir(d);
+  } else if (d == NULL) {
+    mkdir("../logs", 0777);
+    mkdir("../logs/session", 0777);
+  }
+
+  if (access(logPath, F_OK) == 0) {
+    type = "a";
+  } else {
+    type = "w";
+  }
+
   logger.file = fopen(logPath, type);
   pthread_mutex_init(&logger.logMutex, NULL);
 }
-void log_message(LogType type, char *file, int line, char *mess) {
+void log_message(LogType type, char *file, i32 line, char *mess) {
   pthread_mutex_lock(&logger.logMutex);
 
   ASSERT(logger.file != NULL, "logger wasn't properly initialized...\n");
