@@ -19,6 +19,8 @@ typedef struct MultiListNode {
   struct Node *prev;
 } MultiListNode;
 
+
+
 /*
   All of these functions apply for Circular and singly linked list
   Because they are the most common and in order for it to not get

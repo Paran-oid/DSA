@@ -32,4 +32,9 @@ typedef ssize_t isize;
     }                                                                          \
   } while (0)
 
+typedef struct Pair {
+  i32 first;
+  i32 second;
+} Pair;
+
 void swap(void *arg1, void *arg2, usize item_size);
