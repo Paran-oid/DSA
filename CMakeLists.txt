@@ -9,12 +9,13 @@ set(SRC
   src/matrix.c
   src/funcs.c
   src/linked.c
-  src/sorting.c
   src/stack.c
   src/lstack.c
   src/logs.c
   src/queue.c
   src/lqueue.c
+  src/array.c
+  src/tree.c
   )
 
 set(INCLUDE 
@@ -24,6 +25,16 @@ set(INCLUDE
 add_executable(DSA ${SRC})
 
 target_include_directories(DSA PRIVATE ${INCLUDE})
+
+# These are really important to be sure that I am writing safe and robust code
+
+target_compile_options(DSA PRIVATE
+  -Wall
+  -Wextra
+  -Wpedantic
+  -Werror
+  -O2
+)
 
 add_custom_target(RUN ALL
 COMMAND echo
