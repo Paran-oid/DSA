@@ -24,5 +24,6 @@ this library contains everything related to the topic "Data Structures and Algor
 
 # TODO:
 
-- Make a dynamic array with generic types
+- Make all Data structures and algorithms work WITH GENERICS!!!
+- Make sure to add error checking for every malloc and make sure each gets freed
 - Make testing functionality

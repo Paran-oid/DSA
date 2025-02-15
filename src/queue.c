@@ -14,7 +14,7 @@ Queue init_queue(void) {
   res.front = 0;
 
   return res;
-};
+}
 
 void print_queue(Queue *queue) {
   printf("{");

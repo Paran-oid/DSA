@@ -56,7 +56,7 @@ void log_message(LogType type, char *file, i32 line, char *mess) {
   ASSERT(logger.file != NULL, "logger wasn't properly initialized...\n");
   ASSERT(mess != NULL, "please enter a logging message...\n");
 
-  char *typeStr;
+  char *typeStr = "";
 
   switch (type) {
   case logInformation:

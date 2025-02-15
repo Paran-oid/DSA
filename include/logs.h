@@ -13,8 +13,6 @@ typedef struct Logger {
 typedef enum LogType { logInformation, logWarning, logDanger } LogType;
 typedef enum LogDate { SESSION, ALL } LogDate;
 
-static Logger logger;
-
 #define INFO(message) (log_message(logInformation, __FILE__, __LINE__, message))
 #define WARN(message) (log_message(logWarning, __FILE__, __LINE__, message))
 #define DANGER(message) (log_message(logDanger, __FILE__, __LINE__, message))

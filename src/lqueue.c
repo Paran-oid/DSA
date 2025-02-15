@@ -29,12 +29,25 @@ void destroy_lqueue(LQueue *queue) {
     curr = curr->next;
     free(temp);
   }
+  free(queue);
 }
 
 void enqeue_lqueue(LQueue **queue, i32 n) {
+  if ((*queue) == NULL) {
+    *queue = init_lqueue(n);
+    return;
+  }
+
   ListNode *newHead = init_node(n);
-  (*queue)->back->next = newHead;
+
+  if ((*queue)->back)
+    (*queue)->back->next = newHead;
+
   (*queue)->back = newHead;
+
+  if ((*queue)->front == NULL) {
+    (*queue)->front = newHead;
+  }
 }
 
 i32 dequeue_lqueue(LQueue **queue) {
@@ -42,6 +55,17 @@ i32 dequeue_lqueue(LQueue **queue) {
   i32 res = (*queue)->front->val;
   ListNode *temp = (*queue)->front;
   (*queue)->front = (*queue)->front->next;
+
+  if ((*queue)->front == NULL) {
+    (*queue)->back = NULL;
+  }
+
   free(temp);
+
+  return res;
 }
-i32 peek_lqueue(LQueue *queue) { return queue->front->val; }
+
+i32 peek_lqueue(LQueue *queue) {
+  ASSERT(queue->front != NULL, "Queue must have items...\n");
+  return queue->front->val;
+}

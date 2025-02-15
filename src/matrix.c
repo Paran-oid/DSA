@@ -134,4 +134,4 @@ Matrix mult_mat(Matrix *mat1, Matrix *mat2) {
 }
 
 // TODO
-void rot_mat(Matrix *mat) {}
+// void rot_mat(Matrix *mat) {}
