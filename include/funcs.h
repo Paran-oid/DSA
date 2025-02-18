@@ -24,7 +24,6 @@ typedef ssize_t isize;
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
-// We are using while 0 to prevent buggy code with if-else
 #define ASSERT(_e, ...)                                                        \
   do {                                                                         \
     if (!(_e)) {                                                               \
@@ -33,9 +32,13 @@ typedef ssize_t isize;
     }                                                                          \
   } while (0)
 
-typedef struct Pair {
-  i32 first;
-  i32 second;
-} Pair;
+typedef struct pair {
+  void *first;
+  void *second;
+  enum datatype type;
+} pair_t;
 
-void swap(void *arg1, void *arg2, usize item_size);
+enum datatype { CHAR, INT, FLOAT, DOUBLE };
+
+usize type_map(enum datatype type);
+void swap(void *arg1, void *arg2, enum datatype type);

@@ -1,45 +1,42 @@
-#pragma once
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
 
 #include "funcs.h"
-
 #include <stdbool.h>
 
-// SINGLE LINKED LIST
-// CIRCULAR LINKED LIST
+enum datatype { TYPE_INT, TYPE_FLOAT, TYPE_DOUBLE, TYPE_CHAR, TYPE_STRING };
 
-typedef struct ListNode {
-  i32 val;
-  struct ListNode *next;
-} ListNode;
+// SINGLE LINKED LIST (CIRCULAR & NORMAL)
+typedef struct listnode {
+  void *val;
+  struct listnode *next;
+  enum datatype type;
+} listnode_t;
 
 // DOUBLY LINKED LIST
-typedef struct MultiListNode {
-  i32 val;
-  struct Node *next;
-  struct Node *prev;
-} MultiListNode;
+typedef struct dlistnode {
+  void *val;
+  struct dlistnode *next;
+  struct dlistnode *prev;
+  enum datatype type;
+} dlistnode_t;
 
+listnode_t *list_init(void *val, void *next, enum datatype type);
+void list_destroy(listnode_t *head);
 
+void list_begin_insert(listnode_t **head, void *val);
+void list_pos_insert(listnode_t **head, usize pos, void *val);
+void list_end_insert(listnode_t **head, void *val);
+
+void list_begin_delete(listnode_t **head);
+void list_end_delete(listnode_t **head);
+void list_pos_delete(listnode_t **head, usize pos);
 
 /*
-  All of these functions apply for Circular and singly linked list
-  Because they are the most common and in order for it to not get
-  too repetitive
+  LeetCode Section - Singly Linked List Problems
 */
+listnode_t *reverse_list(listnode_t *head);
+listnode_t *merge_two_lists(listnode_t *list1, listnode_t *list2);
+bool has_cycle(listnode_t *head);
 
-ListNode *init_node(i32 val);
-void print_list(ListNode *head);
-void destroy_node(ListNode *node);
-
-void begin_insert__node(ListNode **head, i32 val);
-void end_insert_node(ListNode *head, i32 val);
-void pos_insert_node(ListNode **head, usize pos, i32 val);
-
-void begin_delete_node(ListNode **head);
-void end_delete_node(ListNode *head);
-void pos_delete_node(ListNode **head, usize pos);
-
-// LEETCODE SECTION
-ListNode *reverse_list(ListNode *head);
-ListNode *merge_two_lists(ListNode *list1, ListNode *list2);
-bool has_cycle(ListNode *head);
+#endif // LINKED_LIST_H

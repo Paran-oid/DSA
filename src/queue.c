@@ -1,53 +1,71 @@
-#include "queue.h"
-#include "funcs.h"
+#include "lqueue.h"
+#include "linked.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 
-Queue init_queue(void) {
-  Queue res;
-  res.arr = (i32 *)calloc(5, sizeof(i32));
-  res.size = 0;
-  res.capacity = 5;
-
-  res.back = 0;
-  res.front = 0;
-
+LQueue *init_lqueue(i32 val) {
+  LQueue *res = (LQueue *)malloc(sizeof(LQueue));
+  res->back = init_node(val);
+  res->front = res->back;
   return res;
 }
 
-void print_queue(Queue *queue) {
+void print_lqueue(LQueue *queue) {
+  ListNode *curr = queue->front;
   printf("{");
-  for (usize i = queue->front; i < queue->size; i++) {
-    if (i != queue->size - 1)
-      printf("%d, ", queue->arr[i]);
-    else
-      printf("%d", queue->arr[i]);
+  while (curr != NULL) {
+    printf("%d", curr->val);
+    if (curr->next != NULL) {
+      printf(", ");
+    }
+    curr = curr->next;
   }
   printf("}");
 }
+void destroy_lqueue(LQueue *queue) {
+  ListNode *curr = queue->front;
+  while (curr != NULL) {
+    ListNode *temp = curr;
+    curr = curr->next;
+    free(temp);
+  }
+  free(queue);
+}
 
-void destroy_queue(Queue *queue) { free(queue->arr); }
-
-void enqeue_queue(Queue *queue, i32 n) {
-  if (queue->size == queue->capacity) {
-    resize(queue);
+void enqeue_lqueue(LQueue **queue, i32 n) {
+  if ((*queue) == NULL) {
+    *queue = init_lqueue(n);
+    return;
   }
 
-  queue->arr[queue->back] = n;
-  queue->back++;
-  queue->size++;
+  ListNode *newHead = init_node(n);
+
+  if ((*queue)->back)
+    (*queue)->back->next = newHead;
+
+  (*queue)->back = newHead;
+
+  if ((*queue)->front == NULL) {
+    (*queue)->front = newHead;
+  }
 }
 
-i32 dequeue_queue(Queue *queue) {
-  ASSERT(queue->front != queue->back, "Invalid dequeue process...\n");
-  i32 res = queue->arr[queue->front];
-  queue->front++;
+i32 dequeue_lqueue(LQueue **queue) {
+  ASSERT((*queue)->front != NULL, "Invalid queue\n");
+  i32 res = (*queue)->front->val;
+  ListNode *temp = (*queue)->front;
+  (*queue)->front = (*queue)->front->next;
+
+  if ((*queue)->front == NULL) {
+    (*queue)->back = NULL;
+  }
+
+  free(temp);
+
   return res;
 }
-i32 peek_queue(Queue *queue) { return queue->arr[queue->front]; }
 
-static void resize(Queue *queue) {
-  queue->capacity += 100;
-  queue->arr = realloc(queue->arr, queue->capacity * sizeof(i32));
+i32 peek_lqueue(LQueue *queue) {
+  ASSERT(queue->front != NULL, "Queue must have items...\n");
+  return queue->front->val;
 }

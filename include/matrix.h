@@ -1,24 +1,25 @@
 #pragma once
 
 #include "funcs.h"
-
 #include <stddef.h>
 
-typedef struct {
-  size_t cols;
-  size_t rows;
-  i32 **items;
-} Matrix;
+typedef struct matrix {
+  usize cols;
+  usize rows;
+  void **items;
+  enum datatype type;
+} matrix_t;
 
-Matrix init_mat(usize rows, usize cols);
-void fill_mat(Matrix *mat, i32 *arr, usize n);
-void print_mat(Matrix *mat);
-void destroy_mat(Matrix *mat);
+// Matrix Initialization & Destruction
+matrix_t *mat_init(usize rows, usize cols, enum datatype type);
+void mat_fill(matrix_t *mat, const void *arr, usize n);
+void mat_print(const matrix_t *mat);
+void mat_destroy(matrix_t *mat);
 
-i32 det_mat(Matrix *mat);
-
-Matrix add_mat(Matrix *mat1, Matrix *mat2);
-Matrix mult_mat(Matrix *mat1, Matrix *mat2);
-void rot_mat(Matrix *mat);
+// Matrix Operations
+double mat_det(const matrix_t *mat);
+matrix_t *mat_add(const matrix_t *mat1, const matrix_t *mat2);
+matrix_t *mat_mult(const matrix_t *mat1, const matrix_t *mat2);
+void mat_rot(matrix_t *mat);
 
 // LEETCODE SECTION

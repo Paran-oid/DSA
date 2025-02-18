@@ -1,22 +1,17 @@
 #pragma once
 
-#include "funcs.h"
+#include "linked.h"
 
-typedef struct Queue {
-  i32 *arr;
-  usize size;
-  usize capacity;
+typedef struct queue {
+  struct list_node *front;
+  struct list_node *back;
+  enum datatype type;
+} queue_t;
 
-  i32 front;
-  i32 back;
-} Queue;
+// Queue Operations
+queue_t *queue_init(enum datatype type);
+void queue_destroy(queue_t *q);
 
-Queue init_queue(void);
-void print_queue(Queue *queue);
-void destroy_queue(Queue *queue);
-
-void enqeue_queue(Queue *queue, i32 n);
-i32 dequeue_queue(Queue *queue);
-i32 peek_queue(Queue *queue);
-
-static void resize(Queue *queue);
+void queue_enqueue(queue_t *q, void *n);
+void *queue_dequeue(queue_t *q);
+const void *queue_peek(const queue_t *q);

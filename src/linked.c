@@ -4,13 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-ListNode *init_node(i32 val) {
-  ListNode *head = malloc(sizeof(ListNode));
+struct listnode *node_init(void *val, enum datatype type) {
+  struct listnode *head = malloc(sizeof(struct listnode));
   head->val = val;
   head->next = NULL;
   return head;
 }
-void print_list(ListNode *head) {
+void list_print(struct list *head) {
   printf("{");
   while (head) {
     if (head->next) {
@@ -22,7 +22,7 @@ void print_list(ListNode *head) {
   }
   printf("}");
 }
-void destroy_node(ListNode *node) {
+void list_destroy(struct list *node) {
   while (node != NULL) {
     ListNode *temp = node;
     node = node->next;
@@ -30,12 +30,12 @@ void destroy_node(ListNode *node) {
   }
 }
 
-void begin_insert__node(ListNode **head, i32 val) {
+void list_begin_insret(struct list **head, void *val) {
   ListNode *newHead = init_node(val);
   newHead->next = *head;
   *head = newHead;
 }
-void end_insert_node(ListNode *head, i32 val) {
+void list_end_insert(struct list *head, i32 val) {
   ListNode *newNode = init_node(val);
 
   ListNode *curr = head;
@@ -45,7 +45,7 @@ void end_insert_node(ListNode *head, i32 val) {
 
   curr->next = newNode;
 }
-void pos_insert_node(ListNode **head, usize pos, i32 val) {
+void list_pos_insert(struct list **head, usize pos, i32 val) {
   ListNode *prev = NULL;
   ListNode *curr = *head;
   while (pos > 0 && curr->next) {
@@ -65,12 +65,12 @@ void pos_insert_node(ListNode **head, usize pos, i32 val) {
   }
 }
 
-void begin_delete_node(ListNode **head) {
+void list_begin_delete(struct list **head) {
   ListNode *temp = *head;
   *head = (*head)->next;
   free(temp);
 }
-void end_delete_node(ListNode *head) {
+void list_end_delete(struct list *head) {
   ListNode *curr = head;
   ListNode *prev = NULL;
   while (curr->next) {
@@ -79,8 +79,7 @@ void end_delete_node(ListNode *head) {
   }
   prev->next = NULL;
 }
-
-void pos_delete_node(ListNode **head, usize pos) {
+void list_pos_delete(struct list **head, usize pos) {
   ListNode *curr = *head;
   ListNode *prev = NULL;
   while (pos > 0 && curr->next) {
@@ -100,7 +99,7 @@ void pos_delete_node(ListNode **head, usize pos) {
 
 // LEETCODE SECTION
 
-ListNode *reverse_list(ListNode *head) {
+struct listnode *reverse_list(struct listnode *head) {
   ListNode *prev = NULL;
   ListNode *curr = head;
   while (curr) {
@@ -111,7 +110,8 @@ ListNode *reverse_list(ListNode *head) {
   }
   return prev;
 }
-ListNode *merge_two_lists(ListNode *list1, ListNode *list2) {
+struct listnode *merge_two_lists(struct listnode *list1,
+                                 struct listnode *list2) {
 
   ListNode *dummy = init_node(0);
   ListNode *ptr = dummy;
@@ -143,7 +143,7 @@ ListNode *merge_two_lists(ListNode *list1, ListNode *list2) {
   return dummy->next;
 }
 
-bool has_cycle(ListNode *head) {
+bool has_cycle(struct listnode *head) {
   ListNode *slow = head;
   ListNode *fast = head;
 

@@ -2,29 +2,30 @@
 
 #include "funcs.h"
 
-// Objects
-typedef struct Array {
-  usize n;
-  i32 *data;
-} Array;
+#include <stdbool.h>
 
-// basic functionality
-Array init_arr(int arr[], usize n);
-void print_arr(Array *arr);
-void destroy_arr(Array *arr);
+typedef struct array {
+  usize n;
+  void **data;
+  enum datatype type;
+} array_t;
+
+// Basic Functionality
+
+array_t *array_init(void **arr, usize n, enum datatype type);
+void array_destroy(array_t *arr);
 
 // Search Algorithms
-bool binary_search_arr(Array *arr, i32 item);
-bool search_arr(Array *arr, i32 item);
 
-// Sort Algorithms
-void selection_sort(Array *arr, bool isAscending);
-void bubble_sort(Array *arr, bool isAscending);
-void insertion_sort(Array *arr, bool isAscending);
-void cycle_sort(Array *arr, bool isAscending);
+bool binary_search(array_t *arr, void *item);
+bool linear_search(array_t *arr, void *item);
 
-// Quick Sort
-void quick_sort(Array *arr, isize low, isize high, bool isAscending);
+// Sorting Algorithms
 
-// Merge Sort
-void merge_sort(Array *arr, isize l, isize r, bool isAscending);
+void selection_sort(array_t *arr, bool ascending);
+void bubble_sort(array_t *arr, bool ascending);
+void insertion_sort(array_t *arr, bool ascending);
+void cycle_sort(array_t *arr, bool ascending);
+
+void quick_sort(array_t *arr, bool ascending);
+void merge_sort(array_t *arr, bool ascending);

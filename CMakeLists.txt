@@ -16,6 +16,7 @@ set(SRC
   src/lqueue.c
   src/array.c
   src/tree.c
+  src/dict.c
   )
 
 set(INCLUDE 

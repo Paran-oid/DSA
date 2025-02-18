@@ -1,20 +1,25 @@
 #pragma once
+
 #include "funcs.h"
 
-typedef struct TreeNode {
-  i32 val;
-  struct TreeNode *right;
-  struct TreeNode *left;
-} TreeNode;
+typedef struct treenode {
+  void *val;
+  struct treenode *right;
+  struct treenode *left;
+} treenode_t;
 
-typedef enum TraverseMode { INORD, PRE, POST, LEVEL } TraverseMode;
+typedef struct tree {
+  treenode_t *root;
+  enum datatype type;
+} tree_t;
 
-TreeNode *init_tree_node(i32 val);
-void print_tree(TreeNode *node, TraverseMode mode);
-void destroy_tree_node(TreeNode *node);
+typedef enum traverse_mode { INORD, PRE, POST, LEVEL } traverse_mode_t;
 
-// TODO
+treenode_t *tree_node_init(void *val, treenode_t *left, treenode_t *right);
 
-// void insert_tree_node(TreeNode *node, i32 val);
-// void delete_tree_node(TreeNode **node);
-// TreeNode *search_tree_node(TreeNode *node, i32 val);
+tree_t *tree_init(enum datatype type);
+void tree_destroy(tree_t *t);
+
+// void tree_insert(tree_t *tree, void *val);
+// void tree_delete(tree_t *tree, void *val);
+// treenode_t *tree_search(const tree_t *tree, void *val);

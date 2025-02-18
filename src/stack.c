@@ -1,54 +1,54 @@
-#include "stack.h"
+#include "lstack.h"
 #include "funcs.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-// Stack Datastructure was implemented through an array method
+// LStack Datastructure was implemented through an array method
 
-Stack init_stack(void) {
-  i32 top = -1;
-  i32 *arr = malloc(sizeof(i32) * 100);
+LStack *init_lstack(i32 val) {
 
-  Stack res = {arr, top, 100, 0};
-
+  LStack *res = malloc(sizeof(LStack));
+  res->val = val;
+  res->next = NULL;
   return res;
 }
 
-void print_stack(Stack *stack) {
+void print_lstack(LStack *stack) {
   printf("{");
-  for (usize i = 0; i < stack->size; i++) {
-    printf("%d", stack->data[i]);
-    if (i != stack->size - 1) {
+  while (stack != NULL) {
+    printf("%d", stack->val);
+    if (stack->next != NULL)
       printf(", ");
-    }
+    stack = stack->next;
   }
   printf("}");
 }
 
-void destroy_stack(Stack *stack) { free(stack->data); }
-
-void push(Stack *stack, i32 el) {
-  if (stack->size >= stack->capacity) {
-    resize(stack);
+void destroy_lstack(LStack *stack) {
+  while (stack->next != NULL) {
+    LStack *temp = stack;
+    stack = stack->next;
+    free(temp);
   }
-  stack->top++;
-  stack->size++;
-  stack->data[stack->top] = el;
-}
-i32 pop(Stack *stack) {
-  ASSERT(stack->size > 0, "Stack is empty...\n");
-  i32 temp = stack->data[stack->top];
-  stack->size--;
-  stack->top--;
-  return temp;
-}
-i32 peek(Stack *stack) {
-  ASSERT(stack->size > 0, "Stack can't be empty when peeking...\n");
-  return stack->data[stack->top];
 }
 
-static void resize(Stack *stack) {
-  stack->capacity += 100;
-  stack->data = realloc(stack->data, stack->capacity * sizeof(i32));
+void push_lstack(LStack **stack, i32 el) {
+
+  LStack *newHead = (LStack *)malloc(sizeof(LStack));
+  newHead->val = el;
+  newHead->next = *stack;
+  *stack = newHead;
 }
+
+i32 pop_lstack(LStack **stack) {
+  i32 res = (*stack)->val;
+
+  LStack *temp = (*stack);
+  *stack = (*stack)->next;
+  free(temp);
+
+  return res;
+}
+
+i32 peek_lstack(LStack *stack) { return stack->val; }

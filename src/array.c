@@ -1,40 +1,35 @@
 #include "array.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
 // basic functionality
-Array init_arr(i32 arr[], usize n) {
-  Array res;
+array_t array_init(void **arr, usize n, enum datatype type) {
+  array_t res;
 
-  i32 *ownArr = (i32 *)malloc(sizeof(i32) * n);
-  memcpy(ownArr, arr, n * sizeof(i32));
+  void *ownArr = malloc(type_map(type) * n);
+  memcpy(ownArr, arr, n * type_amp(type));
 
   res.data = ownArr;
   res.n = n;
+  res.type = type;
   return res;
 }
-void print_arr(Array *arr) {
-  printf("{");
-  for (usize i = 0; i < arr->n; i++) {
-    if (i != arr->n - 1) {
-      printf("%d, ", arr->data[i]);
-    } else {
-      printf("%d", arr->data[i]);
-    }
-  }
-  printf("}\n");
-}
-void destroy_arr(Array *arr) { free(arr->data); }
+
+void destroy_arr(array_t *arr) { free(arr->data); }
 
 // Search Algorithms
-bool binary_search_arr(Array *arr, i32 item) {
+
+bool binary_search_arr(array_t *arr, void *item) {
   i32 l = 0, r = arr->n - 1;
   while (l <= r) {
     i32 mid = l + (r - l) / 2;
-    if (arr->data[mid] == item) {
+    i32 comp = memcmp((char *)arr->data + mid * type_map(arr->type),
+                      (char *)item, type_map(arr->type));
+    if (comp == 0) {
       return true;
-    } else if (arr->data[mid] < item) {
+    } else if (comp < 0) {
       l = ++mid;
     } else {
       r = --mid;
@@ -42,9 +37,10 @@ bool binary_search_arr(Array *arr, i32 item) {
   }
   return false;
 }
-bool search_arr(Array *arr, i32 item) {
+bool search_arr(struct array *arr, void *item) {
   for (usize i = 0; i < arr->n; i++) {
-    if (arr->data[i] == item) {
+    if (memcmp(arr->data + i * type_map(arr->type), item,
+               type_map(arr->type)) == 0) {
       return true;
     }
   }
@@ -52,7 +48,8 @@ bool search_arr(Array *arr, i32 item) {
 }
 
 // Sort Algorithms
-void selection_sort(Array *arr, bool isAscending) {
+
+void selection_sort(struct array *arr, bool isAscending) {
   for (usize i = 0; i < arr->n; i++) {
     usize diff = i;
     for (usize j = i + 1; j < arr->n; j++) {
@@ -66,7 +63,7 @@ void selection_sort(Array *arr, bool isAscending) {
     }
   }
 }
-void bubble_sort(Array *arr, bool isAscending) {
+void bubble_sort(struct array *arr, bool isAscending) {
   bool isSorted = false;
   isize tempN = arr->n;
   while (!isSorted) {
@@ -81,7 +78,7 @@ void bubble_sort(Array *arr, bool isAscending) {
     tempN--;
   }
 }
-void insertion_sort(Array *arr, bool isAscending) {
+void insertion_sort(struct array *arr, bool isAscending) {
   for (usize i = 1; i < (usize)arr->n; i++) {
     i32 temp = arr->data[i];
     isize j = (isize)i - 1;
@@ -93,7 +90,7 @@ void insertion_sort(Array *arr, bool isAscending) {
     arr->data[j + 1] = temp;
   }
 }
-void cycle_sort(Array *arr, bool isAscending) {
+void cycle_sort(struct array *arr, bool isAscending) {
   usize writes = 0;
 
   for (usize cycle_start = 0; cycle_start < arr->n; cycle_start++) {
@@ -140,7 +137,8 @@ void cycle_sort(Array *arr, bool isAscending) {
 }
 
 // Quick Sort
-static isize partition(Array *arr, isize low, isize high, bool isAscending) {
+static isize partition(struct array *arr, isize low, isize high,
+                       bool isAscending) {
   isize i = low - 1;
   for (isize j = low; j < high; j++) {
     if ((arr->data[j] <= arr->data[high] && isAscending) ||
@@ -153,7 +151,7 @@ static isize partition(Array *arr, isize low, isize high, bool isAscending) {
 
   return i + 1;
 }
-void quick_sort(Array *arr, isize low, isize high, bool isAscending) {
+void quick_sort(struct array *arr, isize low, isize high, bool isAscending) {
   if (low < high) {
     isize pivot = partition(arr, low, high, isAscending);
 
@@ -163,7 +161,8 @@ void quick_sort(Array *arr, isize low, isize high, bool isAscending) {
 }
 
 // Merge Sort
-static void merge(Array *arr, isize l, isize m, isize r, bool isAscending) {
+static void merge(struct array *arr, isize l, isize m, isize r,
+                  bool isAscending) {
   isize i, j, k;
   usize n1 = m - l + 1;
   usize n2 = r - m;
@@ -201,7 +200,7 @@ static void merge(Array *arr, isize l, isize m, isize r, bool isAscending) {
     k++;
   }
 }
-void merge_sort(Array *arr, isize l, isize r, bool isAscending) {
+void merge_sort(struct array *arr, isize l, isize r, bool isAscending) {
   if (l < r) {
     isize m = l + (r - l) / 2;
     merge_sort(arr, l, m, isAscending);

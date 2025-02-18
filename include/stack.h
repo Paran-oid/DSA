@@ -2,20 +2,16 @@
 
 #include "funcs.h"
 
-typedef struct Stack {
-  i32 *data;
-  i32 top;
+typedef struct stack {
+  struct listnode **items;
+  struct listnode *head;
+  struct listnode *tail;
+  enum datatype type;
+} stack_t;
 
-  usize capacity;
-  usize size;
-} Stack;
+struct stack *stack_init(enum datatype type);
+void destroy_stack(stack_t *stack);
 
-Stack init_stack(void);
-void print_stack(Stack *stack);
-void destroy_stack(Stack *stack);
-
-void push(Stack *stack, i32 el);
-i32 pop(Stack *stack);
-i32 peek(Stack *stack);
-
-static void resize(Stack *stack);
+void push_stack(stack_t *stack, void *el);
+void *pop_stack(stack_t *stack);
+void *peek_stack(const stack_t *stack);
