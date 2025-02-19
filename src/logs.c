@@ -11,9 +11,9 @@
 #include <pthread.h>
 #include <unistd.h>
 
-static Logger logger;
+static logger_t logger;
 
-void init_logger(LogDate date) {
+void init_logger(enum logdate date) {
   time_t t;
   time(&t);
   char dateBuf[255];
@@ -50,7 +50,7 @@ void init_logger(LogDate date) {
   logger.file = fopen(logPath, type);
   pthread_mutex_init(&logger.logMutex, NULL);
 }
-void log_message(LogType type, char *file, i32 line, char *mess) {
+void log_message(enum logtype type, char *file, i32 line, char *mess) {
   pthread_mutex_lock(&logger.logMutex);
 
   ASSERT(logger.file != NULL, "logger wasn't properly initialized...\n");
@@ -59,15 +59,15 @@ void log_message(LogType type, char *file, i32 line, char *mess) {
   char *typeStr = "";
 
   switch (type) {
-  case logInformation:
+  case INFORMATION:
     typeStr = "INFO";
     break;
 
-  case logWarning:
+  case WARNING:
     typeStr = "WARN";
     break;
 
-  case logDanger:
+  case DANGER:
     typeStr = "DANGER";
     break;
   }

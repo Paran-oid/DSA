@@ -35,10 +35,10 @@ typedef ssize_t isize;
 typedef struct pair {
   void *first;
   void *second;
-  enum datatype type;
+  usize type;
 } pair_t;
 
-enum datatype { CHAR, INT, FLOAT, DOUBLE };
+enum datatype { CHAR, INT, FLOAT, DOUBLE, STRING };
 
 usize type_map(enum datatype type);
 void swap(void *arg1, void *arg2, enum datatype type);

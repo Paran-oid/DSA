@@ -5,10 +5,10 @@
 #include <pthread.h>
 #include <stdio.h>
 
-struct Logger {
+typedef struct logger {
   FILE *file;
   pthread_mutex_t logMutex;
-};
+} logger_t;
 
 enum logtype { INFORMATION, WARNING, DANGER };
 enum logdate { SESSION, ALL };

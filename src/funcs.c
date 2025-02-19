@@ -12,6 +12,8 @@ void swap(void *arg1, void *arg2, enum datatype type) {
   memmove(arg2, temp, item_size);
 }
 
+// TODO: make a number comparer (double int, float ...)
+
 usize type_map(enum datatype type) {
   switch (type) {
   case CHAR:
@@ -22,5 +24,9 @@ usize type_map(enum datatype type) {
     return sizeof(f32);
   case DOUBLE:
     return sizeof(f64);
+  case STRING:
+    return sizeof(char *);
+  default:
+    return 0;
   }
 }

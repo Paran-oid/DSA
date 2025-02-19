@@ -8,14 +8,9 @@
 
 int main(void) {
 
-  init_logger(ALL);
+  logger_init(ALL);
 
-  char str[] = "Andrew;New York;";
-  char buff[100];
-
-  sscanf(buff, "%s;%s", &str);
-
-  destroy_logger();
+  logger_destroy();
   exit(EXIT_SUCCESS);
 }
 

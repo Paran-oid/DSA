@@ -6,7 +6,7 @@ typedef struct stack {
   struct listnode **items;
   struct listnode *head;
   struct listnode *tail;
-  enum datatype type;
+  usize tsize;
 } stack_t;
 
 struct stack *stack_init(enum datatype type);

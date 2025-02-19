@@ -5,7 +5,7 @@
 typedef struct queue {
   struct list_node *front;
   struct list_node *back;
-  enum datatype type;
+  usize tsize;
 } queue_t;
 
 // Queue Operations

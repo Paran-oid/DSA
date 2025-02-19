@@ -6,13 +6,13 @@
 
 typedef struct array {
   usize n;
-  void **data;
-  enum datatype type;
+  void *data;
+  usize tsize;
 } array_t;
 
 // Basic Functionality
 
-array_t *array_init(void **arr, usize n, enum datatype type);
+array_t array_init(void *arr, usize n, enum datatype type);
 void array_destroy(array_t *arr);
 
 // Search Algorithms
@@ -27,5 +27,5 @@ void bubble_sort(array_t *arr, bool ascending);
 void insertion_sort(array_t *arr, bool ascending);
 void cycle_sort(array_t *arr, bool ascending);
 
-void quick_sort(array_t *arr, bool ascending);
-void merge_sort(array_t *arr, bool ascending);
+void quick_sort(array_t *arr, isize low, isize high, bool isAscending);
+void merge_sort(array_t *arr, isize l, isize r, bool isAscending);

@@ -10,13 +10,10 @@ set(SRC
   src/funcs.c
   src/linked.c
   src/stack.c
-  src/lstack.c
   src/logs.c
   src/queue.c
-  src/lqueue.c
   src/array.c
   src/tree.c
-  src/dict.c
   )
 
 set(INCLUDE 

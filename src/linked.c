@@ -4,84 +4,98 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct listnode *node_init(void *val, enum datatype type) {
-  struct listnode *head = malloc(sizeof(struct listnode));
+listnode_t *node_init(void *val, listnode_t *next, usize tsize) {
+  listnode_t *head = malloc(sizeof(listnode_t));
   head->val = val;
-  head->next = NULL;
+
+  if (next != NULL)
+    head->next = next;
+  head->tsize = tsize;
+
   return head;
 }
-void list_print(struct list *head) {
-  printf("{");
-  while (head) {
-    if (head->next) {
-      printf("%d->", head->val);
-    } else {
-      printf("%d", head->val);
-    }
-    head = head->next;
-  }
-  printf("}");
+
+list_t *list_init(enum datatype type) {
+  list_t *res = malloc(sizeof(list_t));
+  res->head = NULL;
+  res->tsize = type_map(type);
+
+  return res;
 }
-void list_destroy(struct list *node) {
+
+void list_destroy(list_t *list) {
+  listnode_t *node = list->head;
   while (node != NULL) {
-    ListNode *temp = node;
+    listnode_t *temp = node;
     node = node->next;
     free(temp);
   }
+  free(list);
 }
 
-void list_begin_insret(struct list **head, void *val) {
-  ListNode *newHead = init_node(val);
-  newHead->next = *head;
-  *head = newHead;
+void list_begin_insert(list_t *list, void *val) {
+  listnode_t *newHead = node_init(val, NULL, list->tsize);
+  newHead->next = list->head;
+  list->head = newHead;
 }
-void list_end_insert(struct list *head, i32 val) {
-  ListNode *newNode = init_node(val);
 
-  ListNode *curr = head;
+void list_end_insert(list_t *list, void *val) {
+  listnode_t *newNode = node_init(val, NULL, list->tsize);
+
+  listnode_t *curr = list->head;
   while (curr->next) {
     curr = curr->next;
   }
 
   curr->next = newNode;
 }
-void list_pos_insert(struct list **head, usize pos, i32 val) {
-  ListNode *prev = NULL;
-  ListNode *curr = *head;
+void list_pos_insert(list_t *list, usize pos, void *val) {
+  listnode_t *prev = NULL;
+  listnode_t *curr = list->head;
   while (pos > 0 && curr->next) {
     prev = curr;
     curr = curr->next;
     pos--;
   }
 
-  ListNode *newNode = init_node(val);
+  listnode_t *newNode = node_init(val, NULL, list->tsize);
 
   if (prev) {
     prev->next = newNode;
     newNode->next = curr;
   } else {
     newNode->next = curr;
-    *head = newNode;
+    list->head = newNode;
   }
 }
 
-void list_begin_delete(struct list **head) {
-  ListNode *temp = *head;
-  *head = (*head)->next;
+void list_begin_delete(list_t *list) {
+  listnode_t *temp = list->head;
+  list->head = list->head->next;
   free(temp);
 }
-void list_end_delete(struct list *head) {
-  ListNode *curr = head;
-  ListNode *prev = NULL;
+void list_end_delete(list_t *list) {
+  if (!list->head)
+    return;
+
+  listnode_t *curr = list->head;
+  listnode_t *prev = NULL;
   while (curr->next) {
     prev = curr;
     curr = curr->next;
   }
-  prev->next = NULL;
+
+  if (!prev) {
+    free(curr);
+    list->head = NULL;
+  } else {
+    prev->next = NULL;
+    free(curr);
+  }
 }
-void list_pos_delete(struct list **head, usize pos) {
-  ListNode *curr = *head;
-  ListNode *prev = NULL;
+void list_pos_delete(list_t *list, usize pos) {
+  listnode_t *curr = list->head;
+  listnode_t *prev = NULL;
   while (pos > 0 && curr->next) {
     prev = curr;
     curr = curr->next;
@@ -92,60 +106,60 @@ void list_pos_delete(struct list **head, usize pos) {
     prev->next = curr->next;
     free(curr);
   } else {
-    *head = curr->next;
+    list->head = curr->next;
     free(curr);
   }
 }
 
 // LEETCODE SECTION
 
-struct listnode *reverse_list(struct listnode *head) {
-  ListNode *prev = NULL;
-  ListNode *curr = head;
+listnode_t *reverse_list(listnode_t *head) {
+  listnode_t *prev = NULL;
+  listnode_t *curr = head;
   while (curr) {
-    ListNode *temp = curr->next;
+    listnode_t *temp = curr->next;
     curr->next = prev;
     prev = curr;
     curr = temp;
   }
   return prev;
 }
-struct listnode *merge_two_lists(struct listnode *list1,
-                                 struct listnode *list2) {
+listnode_t *merge_two_lists(listnode_t *head1, listnode_t *head2, usize tsize) {
+  ASSERT(tsize == sizeof(i32), "Must enter values of type int\n");
 
-  ListNode *dummy = init_node(0);
-  ListNode *ptr = dummy;
+  listnode_t *dummy = node_init(0, NULL, tsize);
+  listnode_t *ptr = dummy;
 
-  while (list1 && list2) {
-    if (list1->val < list2->val) {
-      ptr->next = list1;
-      list1 = list1->next;
+  while (head1 && head2) {
+    if (head1->val < head2->val) {
+      ptr->next = head1;
+      head1 = head1->next;
       ptr = ptr->next;
     } else {
-      ptr->next = list2;
-      list2 = list2->next;
+      ptr->next = head2;
+      head2 = head2->next;
       ptr = ptr->next;
     }
   }
 
-  while (list1) {
-    ptr->next = list1;
-    list1 = list1->next;
+  while (head1) {
+    ptr->next = head1;
+    head1 = head1->next;
     ptr = ptr->next;
   }
 
-  while (list2) {
-    ptr->next = list2;
-    list2 = list2->next;
+  while (head2) {
+    ptr->next = head2;
+    head2 = head2->next;
     ptr = ptr->next;
   }
 
   return dummy->next;
 }
 
-bool has_cycle(struct listnode *head) {
-  ListNode *slow = head;
-  ListNode *fast = head;
+bool has_cycle(listnode_t *head) {
+  listnode_t *slow = head;
+  listnode_t *fast = head;
 
   while (fast && fast->next) {
     slow = slow->next;

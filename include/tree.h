@@ -6,11 +6,12 @@ typedef struct treenode {
   void *val;
   struct treenode *right;
   struct treenode *left;
+  usize tsize;
 } treenode_t;
 
 typedef struct tree {
   treenode_t *root;
-  enum datatype type;
+  usize tsize;
 } tree_t;
 
 typedef enum traverse_mode { INORD, PRE, POST, LEVEL } traverse_mode_t;

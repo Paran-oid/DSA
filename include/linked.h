@@ -1,16 +1,13 @@
-#ifndef LINKED_LIST_H
-#define LINKED_LIST_H
+#pragma once
 
 #include "funcs.h"
 #include <stdbool.h>
-
-enum datatype { TYPE_INT, TYPE_FLOAT, TYPE_DOUBLE, TYPE_CHAR, TYPE_STRING };
 
 // SINGLE LINKED LIST (CIRCULAR & NORMAL)
 typedef struct listnode {
   void *val;
   struct listnode *next;
-  enum datatype type;
+  usize tsize;
 } listnode_t;
 
 // DOUBLY LINKED LIST
@@ -18,25 +15,34 @@ typedef struct dlistnode {
   void *val;
   struct dlistnode *next;
   struct dlistnode *prev;
-  enum datatype type;
+  usize tsize;
 } dlistnode_t;
 
-listnode_t *list_init(void *val, void *next, enum datatype type);
-void list_destroy(listnode_t *head);
+typedef struct list {
+  listnode_t *head;
+  usize tsize;
+} list_t;
 
-void list_begin_insert(listnode_t **head, void *val);
-void list_pos_insert(listnode_t **head, usize pos, void *val);
-void list_end_insert(listnode_t **head, void *val);
+typedef struct dlist {
+  dlistnode_t *head;
+  usize tsize;
+} dlist_t;
 
-void list_begin_delete(listnode_t **head);
-void list_end_delete(listnode_t **head);
-void list_pos_delete(listnode_t **head, usize pos);
+listnode_t *node_init(void *val, listnode_t *next, usize tsize);
+list_t *list_init(enum datatype type);
+void list_destroy(list_t *list);
+
+void list_begin_insert(list_t *list, void *val);
+void list_pos_insert(list_t *list, usize pos, void *val);
+void list_end_insert(list_t *list, void *val);
+
+void list_begin_delete(list_t *list);
+void list_end_delete(list_t *list);
+void list_pos_delete(list_t *list, usize pos);
 
 /*
   LeetCode Section - Singly Linked List Problems
 */
 listnode_t *reverse_list(listnode_t *head);
-listnode_t *merge_two_lists(listnode_t *list1, listnode_t *list2);
+listnode_t *merge_two_lists(listnode_t *head1, listnode_t *head2, usize tsize);
 bool has_cycle(listnode_t *head);
-
-#endif // LINKED_LIST_H
