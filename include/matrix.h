@@ -6,6 +6,7 @@
 typedef struct matrix {
   void **items;
   usize rows, cols, tsize;
+  enum datatype type;
 } matrix_t;
 
 // Matrix Initialization & Destruction

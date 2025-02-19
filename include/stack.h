@@ -4,10 +4,9 @@
 #include "linked.h"
 
 typedef struct stack {
-  listnode_t **items;
-  listnode_t *head;
-  listnode_t *tail;
+  listnode_t **items, *head, *tail;
   usize tsize;
+  enum datatype type;
 } stack_t;
 
 struct stack *stack_init(enum datatype type);

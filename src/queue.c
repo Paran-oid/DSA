@@ -8,6 +8,7 @@ queue_t *queue_init(enum datatype type) {
   res->tsize = type_map(type);
   res->back = NULL;
   res->front = NULL;
+  res->type = type;
   return res;
 }
 
@@ -21,6 +22,7 @@ void queue_destroy(queue_t *queue) {
   free(queue);
 }
 
+// FIXME
 void enqueue(queue_t *q, void *n) {
   ASSERT(q != NULL, "Queue must not be NULL");
 
@@ -36,6 +38,7 @@ void enqueue(queue_t *q, void *n) {
   }
 }
 
+// FIXME
 void *dequeue(queue_t *q) {
   ASSERT(q->front != NULL, "Invalid queue\n");
   void *res = q->front->val;

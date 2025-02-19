@@ -6,17 +6,25 @@
 // basic functionality
 
 array_t array_init(void *arr, usize size, enum datatype type) {
-  ASSERT(size != 0, "number of elements in array size can't be 0\size");
-  ASSERT(arr != NULL, "array passed is NULL\size");
+  ASSERT(size != 0, "number of elements in array size can't be \n");
+  ASSERT(arr != NULL, "array passed is NULL \n");
 
+  array_t res = {0};
   usize elsize = type_map(type);
+
+  if (!arr) {
+    void *ownArr = calloc(size, elsize);
+    ASSERT(ownArr != NULL, "couldn't allocate memory for the array");
+    res.data = ownArr;
+    res.size = res.capacity = 0;
+    res.tsize = elsize;
+  }
   void *ownArr = malloc(size * elsize);
 
   ASSERT(ownArr != NULL, "couldn't allocate memory for the array");
 
   memcpy(ownArr, arr, size * elsize);
 
-  array_t res;
   res.data = ownArr;
   res.tsize = elsize;
 
@@ -32,18 +40,18 @@ void array_destroy(array_t *arr) { free(arr->data); }
 
 void *array_get(const array_t *arr, i32 index) {
   ASSERT(arr && arr->data, "Null/Null data passed\n");
-  ASSERT(index >= 0 && index < arr->size, "Index out of range");
+  ASSERT(index >= 0 && index < (i32)arr->size, "Index out of range");
   return (char *)arr->data + (index * arr->tsize);
 }
 void array_set(array_t *arr, i32 index, void *item) {
   ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
-  ASSERT(index > 0 && index < arr->size, "Index out of range");
-  memcpy(arr->data + index * arr->tsize, item, arr->tsize);
+  ASSERT(index > 0 && index < (i32)arr->size, "Index out of range");
+  memcpy((char *)arr->data + index * arr->tsize, item, arr->tsize);
 }
 void array_pushback(array_t *arr, void *item) {
   ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
   if (arr->size == arr->capacity)
-    resize();
+    array_resize(arr);
 
   memcpy((char *)arr->data + arr->size * arr->tsize, item, arr->tsize);
   arr->size++;
@@ -184,7 +192,7 @@ void cycle_sort(array_t *arr, bool isAscending) {
     }
 
     if (pos != cycle_start) {
-      swap_elements((char *)arr->data + pos * arr->tsize, temp, arr->tsize);
+      swap((char *)arr->data + pos * arr->tsize, temp, arr->tsize);
     }
 
     while (pos != cycle_start) {
@@ -202,7 +210,7 @@ void cycle_sort(array_t *arr, bool isAscending) {
       }
 
       if (memcmp(temp, (char *)arr->data + pos * arr->tsize, arr->tsize) != 0) {
-        swap_elements(temp, (char *)arr->data + pos * arr->tsize, arr->tsize);
+        swap(temp, (char *)arr->data + pos * arr->tsize, arr->tsize);
       }
     }
   }

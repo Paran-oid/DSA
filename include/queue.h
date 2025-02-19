@@ -4,9 +4,9 @@
 #include "linked.h"
 
 typedef struct queue {
-  listnode_t *front;
-  listnode_t *back;
+  listnode_t *front, *back;
   usize tsize;
+  enum datatype type;
 } queue_t;
 
 // Queue Operations

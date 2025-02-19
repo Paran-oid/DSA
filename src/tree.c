@@ -34,6 +34,7 @@ tree_t *tree_init(enum datatype type) {
   tree_t *tree = malloc(sizeof(tree_t));
   tree->root = NULL;
   tree->tsize = type_map(type);
+  tree->type = type;
 
   return tree;
 }
@@ -54,21 +55,39 @@ void tree_destroy(tree_t *tree) {
   free(tree);
 }
 
-void treenode_insert(treenode_t *node, treenode_t *nnode) {
-  queue_t *q = queue_init(node->tsize);
-}
+// FIXME
 
 void tree_insert(tree_t *tree, void *val) {
   ASSERT(val, "Null item passed to tree_insert\n");
 
   treenode_t *node = treenode_init(val, NULL, NULL, tree->tsize);
+  printf("address of root is %p\n", tree->root);
 
   if (!tree->root) {
     tree->root = node;
     return;
   }
 
-  treenode_insert(tree->root, node);
+  queue_t *q = queue_init(TREENODE);
+  enqueue(q, tree->root);
+  while (q->front) {
+    treenode_t *current = (treenode_t *)dequeue(q);
+    printf("address of current is %d\n", current->val);
+
+    // if (!current->left) {
+    //   current->left = node;
+    //   break;
+    // }
+    // enqueue(q, current->left);
+
+    // if (!current->right) {
+    //   current->right = node;
+    //   break;
+    // }
+    // enqueue(q, current->right);
+  }
+
+  queue_destroy(q);
 }
 
 // void delete_tree_node(TreeNode **node) {}

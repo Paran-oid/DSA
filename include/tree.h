@@ -12,6 +12,7 @@ typedef struct treenode {
 typedef struct tree {
   treenode_t *root;
   usize tsize;
+  enum datatype type;
 } tree_t;
 
 typedef enum traverse_mode { INORD, PRE, POST, LEVEL } traverse_mode_t;
@@ -23,7 +24,6 @@ tree_t *tree_init(enum datatype type);
 void treenode_destroy(treenode_t *node);
 void tree_destroy(tree_t *tree);
 
-void treenode_insert(treenode_t *node, treenode_t *nnode);
 void tree_insert(tree_t *tree, void *val);
 // void tree_delete(tree_t *tree, void *val);
 // treenode_t *tree_search(const tree_t *tree, void *val);

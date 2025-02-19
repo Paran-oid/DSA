@@ -7,6 +7,7 @@
 typedef struct array {
   void *data;
   usize tsize, size, capacity;
+  enum datatype type;
 } array_t;
 
 // Basic Functionality

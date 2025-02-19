@@ -13,6 +13,7 @@ matrix_t mat_init(usize rows, usize cols, enum datatype type) {
   mat.rows = rows;
   mat.cols = cols;
   mat.tsize = type_map(type);
+  mat.type = type;
 
   mat.items = malloc(sizeof(void *) * mat.rows);
   for (size_t i = 0; i < mat.rows; i++) {

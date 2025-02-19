@@ -1,3 +1,4 @@
+#include "array.h"
 #include "funcs.h"
 #include "logs.h"
 #include "tree.h"
@@ -17,7 +18,6 @@ int main(void) {
   i32 a = 6;
   i32 b = 7;
   i32 c = 8;
-
   tree_t *tree = tree_init(INT);
   tree_insert(tree, &x);
   tree_insert(tree, &y);
@@ -26,7 +26,7 @@ int main(void) {
   tree_insert(tree, &b);
   tree_insert(tree, &c);
 
-  printf("value of root is %d\n", *(i32 *)tree->root->right->left->val);
+  printf("value of root is %d\n", *(i32 *)tree->root->right->val);
 
   logger_destroy();
   exit(EXIT_SUCCESS);

@@ -21,6 +21,7 @@ typedef struct dlistnode {
 typedef struct list {
   listnode_t *head;
   usize tsize;
+  enum datatype type;
 } list_t;
 
 typedef struct dlist {

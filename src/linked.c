@@ -30,6 +30,7 @@ list_t *list_init(enum datatype type) {
   list_t *res = malloc(sizeof(list_t));
   res->head = NULL;
   res->tsize = type_map(type);
+  res->type = type;
 
   return res;
 }

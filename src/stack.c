@@ -12,6 +12,8 @@ stack_t *stack_init(enum datatype type) {
   res->tsize = type_map(type);
   res->tail = NULL;
   res->head = NULL;
+  res->type = type;
+
   return res;
 }
 

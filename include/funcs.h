@@ -32,13 +32,14 @@ typedef ssize_t isize;
     }                                                                          \
   } while (0)
 
+enum datatype { CHAR, INT, FLOAT, DOUBLE, STRING, PAIR, NODE, TREENODE };
+
 typedef struct pair {
   void *first;
   void *second;
-  usize type;
+  usize tsize;
+  enum datatype type;
 } pair_t;
-
-enum datatype { CHAR, INT, FLOAT, DOUBLE, STRING };
 
 usize type_map(enum datatype type);
 enum datatype totype(usize size);

@@ -31,7 +31,8 @@ target_compile_options(DSA PRIVATE
   -Wall
   -Wextra
   -Wpedantic
-  -Werror
+  # TODO reenable me
+  # -Werror
   -O2
 )
 

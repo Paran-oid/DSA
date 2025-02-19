@@ -1,4 +1,6 @@
 #include "funcs.h"
+#include "linked.h"
+#include "tree.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +15,7 @@ void swap(void *arg1, void *arg2, enum datatype type) {
 }
 
 // TODO: make a number comparer (double int, float ...)
-
+// TODO: make a general printer for each data type
 usize type_map(enum datatype type) {
   switch (type) {
   case CHAR:
@@ -26,12 +28,13 @@ usize type_map(enum datatype type) {
     return sizeof(f64);
   case STRING:
     return sizeof(char *);
+  case PAIR:
+    return sizeof(pair_t);
+  case NODE:
+    return sizeof(listnode_t);
+  case TREENODE:
+    return sizeof(treenode_t);
   default:
     return 0;
   }
-}
-
-enum datatype totype(usize size)
-{
-  
 }
