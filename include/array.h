@@ -5,15 +5,21 @@
 #include <stdbool.h>
 
 typedef struct array {
-  usize n;
   void *data;
-  usize tsize;
+  usize tsize, size, capacity;
 } array_t;
 
 // Basic Functionality
 
 array_t array_init(void *arr, usize n, enum datatype type);
 void array_destroy(array_t *arr);
+
+// Dynamic Functionality
+void *array_get(const array_t *arr, i32 index);
+void array_set(array_t *arr, i32 index, void *item);
+void array_pushback(array_t *arr, void *item);
+void *array_popback(array_t *arr);
+void array_resize(array_t *arr);
 
 // Search Algorithms
 

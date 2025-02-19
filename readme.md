@@ -24,6 +24,6 @@ this library contains everything related to the topic "Data Structures and Algor
 
 # TODO:
 
-- Make all Data structures and algorithms work WITH GENERICS!!!
+- Follow implementation structure like pthread_t where you pass item in parameter and return 0 or 1 to see if an operation was successful or not!
 - Make sure to add error checking for every malloc and make sure each gets freed
 - Make testing functionality

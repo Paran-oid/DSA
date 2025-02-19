@@ -1,63 +1,49 @@
-#include "lqueue.h"
+#include "queue.h"
 #include "linked.h"
 
 #include <stdlib.h>
 
-LQueue *init_lqueue(i32 val) {
-  LQueue *res = (LQueue *)malloc(sizeof(LQueue));
-  res->back = init_node(val);
-  res->front = res->back;
+queue_t *queue_init(enum datatype type) {
+  queue_t *res = malloc(sizeof(queue_t));
+  res->tsize = type_map(type);
+  res->back = NULL;
+  res->front = NULL;
   return res;
 }
 
-void print_lqueue(LQueue *queue) {
-  ListNode *curr = queue->front;
-  printf("{");
+void queue_destroy(queue_t *queue) {
+  listnode_t *curr = queue->front;
   while (curr != NULL) {
-    printf("%d", curr->val);
-    if (curr->next != NULL) {
-      printf(", ");
-    }
-    curr = curr->next;
-  }
-  printf("}");
-}
-void destroy_lqueue(LQueue *queue) {
-  ListNode *curr = queue->front;
-  while (curr != NULL) {
-    ListNode *temp = curr;
+    listnode_t *temp = curr;
     curr = curr->next;
     free(temp);
   }
   free(queue);
 }
 
-void enqeue_lqueue(LQueue **queue, i32 n) {
-  if ((*queue) == NULL) {
-    *queue = init_lqueue(n);
-    return;
-  }
+void enqueue(queue_t *q, void *n) {
+  ASSERT(q != NULL, "Queue must not be NULL");
 
-  ListNode *newHead = init_node(n);
+  listnode_t *newHead = node_init(n, NULL, q->tsize);
 
-  if ((*queue)->back)
-    (*queue)->back->next = newHead;
+  if (q->back)
+    q->back->next = newHead;
 
-  (*queue)->back = newHead;
+  q->back = newHead;
 
-  if ((*queue)->front == NULL) {
-    (*queue)->front = newHead;
+  if (q->front == NULL) {
+    q->front = newHead;
   }
 }
 
-i32 dequeue_lqueue(LQueue **queue) {
-  ASSERT((*queue)->front != NULL, "Invalid queue\n");
-  i32 res = (*queue)->front->val;
-  ListNode *temp = (*queue)->front;
-  (*queue)->front = (*queue)->front->next;
+void *dequeue(queue_t *q) {
+  ASSERT(q->front != NULL, "Invalid queue\n");
+  void *res = q->front->val;
+  listnode_t *temp = q->front;
+  q->front = q->front->next;
 
-  if ((*queue)->front == NULL) {
-    (*queue)->back = NULL;
+  if (q->front == NULL) {
+    q->back = NULL;
   }
 
   free(temp);
@@ -65,7 +51,7 @@ i32 dequeue_lqueue(LQueue **queue) {
   return res;
 }
 
-i32 peek_lqueue(LQueue *queue) {
+const void *qpeek(const queue_t *queue) {
   ASSERT(queue->front != NULL, "Queue must have items...\n");
   return queue->front->val;
 }

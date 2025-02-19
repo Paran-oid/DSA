@@ -1,10 +1,11 @@
 #pragma once
 
+#include "funcs.h"
 #include "linked.h"
 
 typedef struct queue {
-  struct list_node *front;
-  struct list_node *back;
+  listnode_t *front;
+  listnode_t *back;
   usize tsize;
 } queue_t;
 
@@ -12,6 +13,6 @@ typedef struct queue {
 queue_t *queue_init(enum datatype type);
 void queue_destroy(queue_t *q);
 
-void queue_enqueue(queue_t *q, void *n);
-void *queue_dequeue(queue_t *q);
-const void *queue_peek(const queue_t *q);
+void enqueue(queue_t *q, void *n);
+void *dequeue(queue_t *q);
+const void *qpeek(const queue_t *q);

@@ -14,6 +14,7 @@ set(SRC
   src/queue.c
   src/array.c
   src/tree.c
+  src/map.c
   )
 
 set(INCLUDE 

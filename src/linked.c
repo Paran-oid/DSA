@@ -3,13 +3,24 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 listnode_t *node_init(void *val, listnode_t *next, usize tsize) {
   listnode_t *head = malloc(sizeof(listnode_t));
-  head->val = val;
+  if (!head) {
+    perror("Failed to allocate memory for linked list\n");
+    exit(EXIT_FAILURE);
+  }
 
-  if (next != NULL)
-    head->next = next;
+  head->val = malloc(tsize);
+  if (!head->val) {
+    perror("Failed to allocate memory for linked list value...\n");
+    free(head);
+    exit(EXIT_FAILURE);
+  }
+
+  memcpy(head->val, val, tsize);
+  head->next = next;
   head->tsize = tsize;
 
   return head;

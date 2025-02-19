@@ -4,30 +4,72 @@
 #include <string.h>
 
 // basic functionality
-array_t array_init(void *arr, usize n, enum datatype type) {
-  ASSERT(n != 0, "number of elements in array n can't be 0\n");
-  ASSERT(arr != NULL, "array passed is NULL\n");
+
+array_t array_init(void *arr, usize size, enum datatype type) {
+  ASSERT(size != 0, "number of elements in array size can't be 0\size");
+  ASSERT(arr != NULL, "array passed is NULL\size");
 
   usize elsize = type_map(type);
-  void *ownArr = malloc(n * elsize);
+  void *ownArr = malloc(size * elsize);
 
   ASSERT(ownArr != NULL, "couldn't allocate memory for the array");
 
-  memcpy(ownArr, arr, n * elsize);
+  memcpy(ownArr, arr, size * elsize);
 
   array_t res;
   res.data = ownArr;
-  res.n = n;
   res.tsize = elsize;
+
+  res.size = size;
+  res.capacity = size;
 
   return res;
 }
 
-void destroy_arr(array_t *arr) { free(arr->data); }
+void array_destroy(array_t *arr) { free(arr->data); }
+
+// Dynamic Functionality
+
+void *array_get(const array_t *arr, i32 index) {
+  ASSERT(arr && arr->data, "Null/Null data passed\n");
+  ASSERT(index >= 0 && index < arr->size, "Index out of range");
+  return (char *)arr->data + (index * arr->tsize);
+}
+void array_set(array_t *arr, i32 index, void *item) {
+  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
+  ASSERT(index > 0 && index < arr->size, "Index out of range");
+  memcpy(arr->data + index * arr->tsize, item, arr->tsize);
+}
+void array_pushback(array_t *arr, void *item) {
+  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
+  if (arr->size == arr->capacity)
+    resize();
+
+  memcpy((char *)arr->data + arr->size * arr->tsize, item, arr->tsize);
+  arr->size++;
+}
+void *array_popback(array_t *arr) {
+  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
+  ASSERT(arr->size > 0, "Array is empty when you tried to pop it...\n");
+  void *res = (char *)arr->data + (arr->size - 1) * arr->tsize;
+  arr->size--;
+  return res;
+}
+void array_resize(array_t *arr) {
+  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
+  arr->capacity = arr->capacity == 0 ? 1 : 2 * arr->capacity;
+  arr->data = realloc(arr->data, arr->capacity);
+
+  if (!arr->data) {
+    perror("error reallocating array\n");
+    exit(EXIT_FAILURE);
+  }
+}
 
 // Search Algorithms
-bool binary_search_arr(array_t *arr, void *item) {
-  i32 l = 0, r = arr->n - 1;
+
+bool binary_search(array_t *arr, void *item) {
+  i32 l = 0, r = arr->size - 1;
   while (l <= r) {
     i32 mid = l + (r - l) / 2;
     i32 comp = memcmp((char *)arr->data + mid * arr->tsize, item, arr->tsize);
@@ -42,8 +84,8 @@ bool binary_search_arr(array_t *arr, void *item) {
   return false;
 }
 
-bool search_arr(array_t *arr, void *item) {
-  for (usize i = 0; i < arr->n; i++) {
+bool linear_search(array_t *arr, void *item) {
+  for (usize i = 0; i < arr->size; i++) {
     if (memcmp((char *)arr->data + i * arr->tsize, item, arr->tsize) == 0) {
       return true;
     }
@@ -52,10 +94,11 @@ bool search_arr(array_t *arr, void *item) {
 }
 
 // Sort Algorithms
+
 void selection_sort(array_t *arr, bool isAscending) {
-  for (usize i = 0; i < arr->n; i++) {
+  for (usize i = 0; i < arr->size; i++) {
     usize diff = i;
-    for (usize j = i + 1; j < arr->n; j++) {
+    for (usize j = i + 1; j < arr->size; j++) {
       i32 res = memcmp((char *)arr->data + j * arr->tsize,
                        (char *)arr->data + diff * arr->tsize, arr->tsize);
       if ((!isAscending && res < 0) || (isAscending && res > 0)) {
@@ -76,7 +119,7 @@ void selection_sort(array_t *arr, bool isAscending) {
 
 void bubble_sort(array_t *arr, bool isAscending) {
   bool isSorted = false;
-  isize tempN = arr->n;
+  isize tempN = arr->size;
   while (!isSorted) {
     isSorted = true;
     for (isize i = 1; i < tempN; i++) {
@@ -99,7 +142,7 @@ void bubble_sort(array_t *arr, bool isAscending) {
 
 void insertion_sort(array_t *arr, bool isAscending) {
   void *temp = malloc(arr->tsize);
-  for (usize i = 1; i < arr->n; i++) {
+  for (usize i = 1; i < arr->size; i++) {
     memcpy(temp, (char *)arr->data + i * arr->tsize, arr->tsize);
     isize j = i - 1;
 
@@ -117,7 +160,58 @@ void insertion_sort(array_t *arr, bool isAscending) {
   free(temp);
 }
 
+void cycle_sort(array_t *arr, bool isAscending) {
+  void *temp = malloc(arr->tsize);
+
+  for (usize cycle_start = 0; cycle_start < arr->size - 1; cycle_start++) {
+    memcpy(temp, (char *)arr->data + cycle_start * arr->tsize, arr->tsize);
+
+    usize pos = cycle_start;
+    for (usize i = cycle_start + 1; i < arr->size; i++) {
+      i32 comp = memcmp((char *)arr->data + i * arr->tsize, temp, arr->tsize);
+      if ((isAscending && comp < 0) || (!isAscending && comp > 0)) {
+        pos++;
+      }
+    }
+
+    if (pos == cycle_start) {
+      continue;
+    }
+
+    while (memcmp((char *)arr->data + pos * arr->tsize, temp, arr->tsize) ==
+           0) {
+      pos++;
+    }
+
+    if (pos != cycle_start) {
+      swap_elements((char *)arr->data + pos * arr->tsize, temp, arr->tsize);
+    }
+
+    while (pos != cycle_start) {
+      pos = cycle_start;
+      for (usize i = cycle_start + 1; i < arr->size; i++) {
+        i32 comp = memcmp((char *)arr->data + i * arr->tsize, temp, arr->tsize);
+        if ((isAscending && comp < 0) || (!isAscending && comp > 0)) {
+          pos++;
+        }
+      }
+
+      while (memcmp((char *)arr->data + pos * arr->tsize, temp, arr->tsize) ==
+             0) {
+        pos++;
+      }
+
+      if (memcmp(temp, (char *)arr->data + pos * arr->tsize, arr->tsize) != 0) {
+        swap_elements(temp, (char *)arr->data + pos * arr->tsize, arr->tsize);
+      }
+    }
+  }
+
+  free(temp);
+}
+
 // Quick Sort
+
 static isize partition(array_t *arr, isize low, isize high, bool isAscending) {
   isize i = low - 1;
   for (isize j = low; j < high; j++) {
@@ -148,5 +242,62 @@ void quick_sort(array_t *arr, isize low, isize high, bool isAscending) {
     isize pivot = partition(arr, low, high, isAscending);
     quick_sort(arr, low, pivot - 1, isAscending);
     quick_sort(arr, pivot + 1, high, isAscending);
+  }
+}
+
+// Merge Sort
+
+static void merge(array_t *arr, isize l, isize m, isize r, bool isAscending) {
+  isize n1 = m - l + 1;
+  isize n2 = r - m;
+
+  void *L = malloc(n1 * arr->tsize);
+  void *R = malloc(n2 * arr->tsize);
+
+  memcpy(L, (char *)arr->data + l * arr->tsize, n1 * arr->tsize);
+  memcpy(R, (char *)arr->data + (m + 1) * arr->tsize, n2 * arr->tsize);
+
+  isize i = 0, j = 0, k = l;
+
+  while (i < n1 && j < n2) {
+    i32 comp = memcmp((char *)L + i * arr->tsize, (char *)R + j * arr->tsize,
+                      arr->tsize);
+
+    if ((isAscending && comp <= 0) || (!isAscending && comp > 0)) {
+      memcpy((char *)arr->data + k * arr->tsize, (char *)L + i * arr->tsize,
+             arr->tsize);
+      i++;
+    } else {
+      memcpy((char *)arr->data + k * arr->tsize, (char *)R + j * arr->tsize,
+             arr->tsize);
+      j++;
+    }
+    k++;
+  }
+
+  while (i < n1) {
+    memcpy((char *)arr->data + k * arr->tsize, (char *)L + i * arr->tsize,
+           arr->tsize);
+    i++;
+    k++;
+  }
+
+  while (j < n2) {
+    memcpy((char *)arr->data + k * arr->tsize, (char *)R + j * arr->tsize,
+           arr->tsize);
+    j++;
+    k++;
+  }
+
+  free(L);
+  free(R);
+}
+
+void merge_sort(array_t *arr, isize l, isize r, bool isAscending) {
+  if (l < r) {
+    isize m = l + (r - l) / 2;
+    merge_sort(arr, l, m, isAscending);
+    merge_sort(arr, m + 1, r, isAscending);
+    merge(arr, l, m, r, isAscending);
   }
 }

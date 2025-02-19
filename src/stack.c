@@ -6,49 +6,40 @@
 
 // stack_t Datastructure was implemented through an array method
 
-stack_t *init_stack(i32 val) {
+stack_t *stack_init(enum datatype type) {
 
   stack_t *res = malloc(sizeof(stack_t));
-  res->val = val;
-  res->next = NULL;
+  res->tsize = type_map(type);
+  res->tail = NULL;
+  res->head = NULL;
   return res;
 }
 
-void print_stack(stack_t *stack_t) {
-  printf("{");
-  while (stack_t != NULL) {
-    printf("%d", stack_t->val);
-    if (stack_t->next != NULL)
-      printf(", ");
-    stack_t = stack_t->next;
-  }
-  printf("}");
-}
+void stack_destroy(stack_t *stack) {
 
-void destroy_stack(stack_t *stack_t) {
-  while (stack_t->next != NULL) {
-    stack_t *temp = stack_t;
-    stack_t = stack_t->next;
+  listnode_t *curr = stack->head;
+  while (curr) {
+    listnode_t *temp = curr;
+    curr = curr->next;
     free(temp);
   }
+  free(stack);
 }
 
-void push_stack(stack_t **stack_t, i32 el) {
+void push(stack_t *stack, void *el) {
 
-  stack_t *newHead = (stack_t *)malloc(sizeof(stack_t));
-  newHead->val = el;
-  newHead->next = *stack_t;
-  *stack_t = newHead;
+  listnode_t *newHead = node_init(el, stack->head, stack->tsize);
+  stack->head = newHead;
 }
 
-i32 pop_stack(stack_t **stack_t) {
-  i32 res = (*stack_t)->val;
+void *pop(stack_t *stack) {
+  void *res = stack->head->val;
 
-  stack_t *temp = (*stack_t);
-  *stack_t = (*stack_t)->next;
+  listnode_t *temp = stack->head;
+  stack->head = stack->head->next;
   free(temp);
 
   return res;
 }
 
-i32 peek_stack(stack_t *stack_t) { return stack_t->val; }
+void *speek(const stack_t *stack) { return stack->head->val; }

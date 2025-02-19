@@ -30,3 +30,8 @@ usize type_map(enum datatype type) {
     return 0;
   }
 }
+
+enum datatype totype(usize size)
+{
+  
+}

@@ -1,90 +1,76 @@
 #include "tree.h"
 #include "funcs.h"
-#include "lqueue.h"
+#include "queue.h"
 
-static void inorder_traversal(TreeNode *node) {
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+treenode_t *treenode_init(void *val, treenode_t *left, treenode_t *right,
+                          usize tsize) {
+  treenode_t *mynode = malloc(sizeof(treenode_t));
+
+  if (!mynode) {
+    perror("There was an error allocating memory for treenode\n");
+    exit(EXIT_FAILURE);
+  }
+
+  mynode->left = left;
+  mynode->right = right;
+  mynode->val = malloc(tsize);
+
+  if (!mynode->val) {
+    perror("There was an error allocating memory for treenode val\n");
+    free(mynode);
+    exit(EXIT_FAILURE);
+  }
+
+  memcpy(mynode->val, val, tsize);
+
+  return mynode;
+}
+
+tree_t *tree_init(enum datatype type) {
+  tree_t *tree = malloc(sizeof(tree_t));
+  tree->root = NULL;
+  tree->tsize = type_map(type);
+
+  return tree;
+}
+
+void treenode_destroy(treenode_t *node) {
   if (node == NULL)
     return;
 
-  inorder_traversal(node->left);
-
-  printf("%d, ", node->val);
-
-  inorder_traversal(node->right);
-}
-static void preorder_traversal(TreeNode *node) {
-  if (node == NULL)
-    return;
-
-  printf("%d, ", node->val);
-
-  preorder_traversal(node->left);
-
-  preorder_traversal(node->right);
-}
-static void postorder_traversal(TreeNode *node) {
-  if (node == NULL)
-    return;
-
-  postorder_traversal(node->left);
-
-  postorder_traversal(node->right);
-
-  printf("%d, ", node->val);
-}
-// FIXME
-static void levelorder_traversal(TreeNode *node) {
-  LQueue *q = init_lqueue((i32)(intptr_t)node);
-  while (q->front != NULL) {
-    TreeNode *extracted_node = (TreeNode *)(intptr_t)dequeue_lqueue(&q);
-    printf("%d, ", extracted_node->val);
-
-    if (extracted_node->left) {
-      enqeue_lqueue(&q, (i32)(intptr_t)extracted_node->left);
-    }
-    if (extracted_node->right) {
-      enqeue_lqueue(&q, (i32)(intptr_t)extracted_node->right);
-    }
-  }
-}
-
-TreeNode *init_tree_node(i32 val) {
-  TreeNode *myNode = (TreeNode *)malloc(sizeof(TreeNode));
-  myNode->left = NULL;
-  myNode->right = NULL;
-  myNode->val = val;
-
-  return myNode;
-}
-void print_tree(TreeNode *node, TraverseMode mode) {
-  switch (mode) {
-  case INORD:
-    inorder_traversal(node);
-    break;
-  case PRE:
-    preorder_traversal(node);
-    break;
-  case POST:
-    postorder_traversal(node);
-    break;
-  case LEVEL:
-    levelorder_traversal(node);
-    break;
-  }
-}
-void destroy_tree_node(TreeNode *node) {
-  if (node == NULL) {
-    return;
-  }
-
-  destroy_tree_node(node->right);
-  destroy_tree_node(node->left);
-
+  treenode_destroy(node->left);
+  treenode_destroy(node->right);
   free(node);
 }
+void tree_destroy(tree_t *tree) {
+  if (!tree)
+    return;
 
-// void insert_tree_node(TreeNode *node, i32 val) {
-// }
+  treenode_destroy(tree->root);
+  free(tree);
+}
+
+void treenode_insert(treenode_t *node, treenode_t *nnode) {
+  queue_t *q = queue_init(node->tsize);
+}
+
+void tree_insert(tree_t *tree, void *val) {
+  ASSERT(val, "Null item passed to tree_insert\n");
+
+  treenode_t *node = treenode_init(val, NULL, NULL, tree->tsize);
+
+  if (!tree->root) {
+    tree->root = node;
+    return;
+  }
+
+  treenode_insert(tree->root, node);
+}
+
 // void delete_tree_node(TreeNode **node) {}
 // TreeNode *search_tree_node(TreeNode *node, i32 val) {
 //   if (node == NULL)

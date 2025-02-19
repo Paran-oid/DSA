@@ -41,4 +41,5 @@ typedef struct pair {
 enum datatype { CHAR, INT, FLOAT, DOUBLE, STRING };
 
 usize type_map(enum datatype type);
+enum datatype totype(usize size);
 void swap(void *arg1, void *arg2, enum datatype type);

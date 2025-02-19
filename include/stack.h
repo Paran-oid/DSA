@@ -1,17 +1,18 @@
 #pragma once
 
 #include "funcs.h"
+#include "linked.h"
 
 typedef struct stack {
-  struct listnode **items;
-  struct listnode *head;
-  struct listnode *tail;
+  listnode_t **items;
+  listnode_t *head;
+  listnode_t *tail;
   usize tsize;
 } stack_t;
 
 struct stack *stack_init(enum datatype type);
-void destroy_stack(stack_t *stack);
+void stack_destroy(stack_t *stack);
 
-void push_stack(stack_t *stack, void *el);
-void *pop_stack(stack_t *stack);
-void *peek_stack(const stack_t *stack);
+void push(stack_t *stack, void *el);
+void *pop(stack_t *stack);
+void *speek(const stack_t *stack);
