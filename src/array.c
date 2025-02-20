@@ -5,7 +5,7 @@
 
 // basic functionality
 
-array_t array_init(void *arr, usize size, enum datatype type) {
+array_t array_create(void *arr, usize size, enum datatype type) {
   ASSERT(size != 0, "number of elements in array size can't be \n");
   ASSERT(arr != NULL, "array passed is NULL \n");
 
@@ -44,12 +44,12 @@ void *array_get(const array_t *arr, i32 index) {
   return (char *)arr->data + (index * arr->tsize);
 }
 void array_set(array_t *arr, i32 index, void *item) {
-  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
+  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uncreateialized");
   ASSERT(index > 0 && index < (i32)arr->size, "Index out of range");
   memcpy((char *)arr->data + index * arr->tsize, item, arr->tsize);
 }
 void array_pushback(array_t *arr, void *item) {
-  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
+  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uncreateialized");
   if (arr->size == arr->capacity)
     array_resize(arr);
 
@@ -57,14 +57,14 @@ void array_pushback(array_t *arr, void *item) {
   arr->size++;
 }
 void *array_popback(array_t *arr) {
-  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
+  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uncreateialized");
   ASSERT(arr->size > 0, "Array is empty when you tried to pop it...\n");
   void *res = (char *)arr->data + (arr->size - 1) * arr->tsize;
   arr->size--;
   return res;
 }
 void array_resize(array_t *arr) {
-  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uninitialized");
+  ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uncreateialized");
   arr->capacity = arr->capacity == 0 ? 1 : 2 * arr->capacity;
   arr->data = realloc(arr->data, arr->capacity);
 

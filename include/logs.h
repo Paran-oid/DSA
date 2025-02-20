@@ -18,7 +18,7 @@ enum logdate { SESSION, ALL };
 #define WARN(message) (logger_message(logWarning, __FILE__, __LINE__, message))
 #define DANGER(message) (logger_message(logDanger, __FILE__, __LINE__, message))
 
-void logger_init(enum logdate date);
+void logger_create(enum logdate date);
 void logger_message(enum logtype type, const char *file, i32 line,
                     const char *mess);
 void logger_destroy();

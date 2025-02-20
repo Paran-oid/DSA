@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_STR_LEN 100
+
 void swap(void *arg1, void *arg2, enum datatype type) {
   usize item_size = type_map(type);
   char temp[item_size];
@@ -26,14 +28,15 @@ usize type_map(enum datatype type) {
     return sizeof(f32);
   case DOUBLE:
     return sizeof(f64);
+  // Pointer section
   case STRING:
     return sizeof(char *);
   case PAIR:
-    return sizeof(pair_t);
+    return sizeof(pair_t *);
   case NODE:
-    return sizeof(listnode_t);
+    return sizeof(listnode_t *);
   case TREENODE:
-    return sizeof(treenode_t);
+    return sizeof(treenode_t *);
   default:
     return 0;
   }

@@ -29,8 +29,8 @@ typedef struct dlist {
   usize tsize;
 } dlist_t;
 
-listnode_t *node_init(void *val, listnode_t *next, usize tsize);
-list_t *list_init(enum datatype type);
+listnode_t *node_create(void *val, listnode_t *next, usize tsize);
+list_t *list_create(enum datatype type);
 void list_destroy(list_t *list);
 
 void list_begin_insert(list_t *list, void *val);

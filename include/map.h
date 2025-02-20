@@ -9,7 +9,7 @@
 //   usize keysize, valuesize;
 // } map_t;
 
-// map_t map_init(enum datatype key_type, enum datatype value_type);
+// map_t map_create(enum datatype key_type, enum datatype value_type);
 // void map_destroy(map_t *map);
 
 // bool map_set(map_t *map, void *key, void *value);

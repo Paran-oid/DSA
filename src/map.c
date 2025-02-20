@@ -7,12 +7,12 @@
 // #include <stdio.h>
 // #include <stdlib.h>
 
-// map_t map_init(enum datatype key_type, enum datatype value_type) {
+// map_t map_create(enum datatype key_type, enum datatype value_type) {
 //   map_t map;
 
 //   map.keysize = type_map(key_type);
 //   map.valuesize = type_map(value_type);
-//   map.items = array_init(NULL, 3, PAIR);
+//   map.items = array_create(NULL, 3, PAIR);
 
 //   return map;
 // }
@@ -53,5 +53,5 @@
 // }
 // void map_clear(map_t *map) {
 //   array_destroy(&map->items);
-//   map->items = array_init(NULL, 1, PAIR);
+//   map->items = array_create(NULL, 1, PAIR);
 // }

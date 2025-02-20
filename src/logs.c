@@ -13,7 +13,7 @@
 
 static logger_t logger;
 
-void logger_init(enum logdate date) {
+void logger_create(enum logdate date) {
   time_t t;
   time(&t);
   char dateBuf[255];
@@ -54,7 +54,7 @@ void logger_message(enum logtype type, const char *file, i32 line,
                     const char *mess) {
   pthread_mutex_lock(&logger.logMutex);
 
-  ASSERT(logger.file != NULL, "logger wasn't properly initialized...\n");
+  ASSERT(logger.file != NULL, "logger wasn't properly createialized...\n");
   ASSERT(mess != NULL, "please enter a logging message...\n");
 
   char *typeStr = "";

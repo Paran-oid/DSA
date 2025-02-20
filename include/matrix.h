@@ -9,8 +9,8 @@ typedef struct matrix {
   enum datatype type;
 } matrix_t;
 
-// Matrix Initialization & Destruction
-matrix_t mat_init(usize rows, usize cols, enum datatype type);
+// Matrix createialization & Destruction
+matrix_t mat_create(usize rows, usize cols, enum datatype type);
 void mat_fill(matrix_t *mat, const void *arr, usize n);
 void mat_destroy(matrix_t *mat);
 

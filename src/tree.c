@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-treenode_t *treenode_init(void *val, treenode_t *left, treenode_t *right,
-                          usize tsize) {
+treenode_t *treenode_create(void *val, treenode_t *left, treenode_t *right,
+                            usize tsize) {
   treenode_t *mynode = malloc(sizeof(treenode_t));
 
   if (!mynode) {
@@ -30,7 +30,7 @@ treenode_t *treenode_init(void *val, treenode_t *left, treenode_t *right,
   return mynode;
 }
 
-tree_t *tree_init(enum datatype type) {
+tree_t *tree_create(enum datatype type) {
   tree_t *tree = malloc(sizeof(tree_t));
   tree->root = NULL;
   tree->tsize = type_map(type);
@@ -55,50 +55,99 @@ void tree_destroy(tree_t *tree) {
   free(tree);
 }
 
-// FIXME
+treenode_t *tree_parent(treenode_t *root, void *val, usize tsize) {
+  if (!root)
+    return NULL;
 
+  if ((root->left && memcmp(root->left->val, val, tsize) == 0) ||
+      (root->right && memcmp(root->right->val, val, tsize) == 0)) {
+    return root;
+  }
+
+  treenode_t *right_parent = tree_parent(root->right, val, tsize);
+  if (right_parent) {
+    return right_parent;
+  }
+
+  return tree_parent(root->left, val, tsize);
+
+  return NULL;
+}
 void tree_insert(tree_t *tree, void *val) {
   ASSERT(val, "Null item passed to tree_insert\n");
 
-  treenode_t *node = treenode_init(val, NULL, NULL, tree->tsize);
-  printf("address of root is %p\n", tree->root);
+  treenode_t *node = treenode_create(val, NULL, NULL, tree->tsize);
 
-  if (!tree->root) {
+  if (tree->root == NULL) {
     tree->root = node;
     return;
   }
 
-  queue_t *q = queue_init(TREENODE);
-  enqueue(q, tree->root);
+  queue_t *q = queue_create(TREENODE);
+  enqueue(q, &(tree->root));
   while (q->front) {
-    treenode_t *current = (treenode_t *)dequeue(q);
-    printf("address of current is %d\n", current->val);
+    treenode_t *current = *(treenode_t **)dequeue(q);
+    if (current->val == node->val) {
+      break;
+    }
 
-    // if (!current->left) {
-    //   current->left = node;
-    //   break;
-    // }
-    // enqueue(q, current->left);
+    if (current->left == NULL) {
+      current->left = node;
+      break;
+    }
+    enqueue(q, &(current->left));
 
-    // if (!current->right) {
-    //   current->right = node;
-    //   break;
-    // }
-    // enqueue(q, current->right);
+    if (current->right == NULL) {
+      current->right = node;
+      break;
+    }
+    enqueue(q, &(current->right));
   }
 
   queue_destroy(q);
 }
 
-// void delete_tree_node(TreeNode **node) {}
-// TreeNode *search_tree_node(TreeNode *node, i32 val) {
-//   if (node == NULL)
-//     return;
+static void tree_helper_delete(treenode_t *root, treenode_t **lastptr,
+                               treenode_t **itemptr, void *val, usize tsize) {
+  if (!root)
+    return;
 
-//   if (node->val == val) {
-//     return node;
-//   }
+  if (memcmp(root->val, val, tsize) == 0)
+    *itemptr = root;
 
-//   TreeNode *leftRes = search_tree_node(node->left, val);
-//   return search_tree_node(node->right, val) ? leftRes == NULL : leftRes;
-// }
+  tree_helper_delete(root->left, lastptr, itemptr, val, tsize);
+  *lastptr = root;
+  tree_helper_delete(root->right, lastptr, itemptr, val, tsize);
+}
+
+void tree_delete(tree_t *tree, void *val) {
+  treenode_t *lastptr = NULL, *itemptr = NULL, *parentptr = NULL;
+
+  tree_helper_delete(tree->root, &lastptr, &itemptr, val, tree->tsize);
+
+  if (itemptr && lastptr)
+    memcpy(itemptr->val, lastptr->val, tree->tsize);
+
+  parentptr = tree_parent(tree->root, lastptr->val, tree->tsize);
+
+  if (parentptr->right)
+    parentptr->right = NULL;
+  else
+    parentptr->left = NULL;
+
+  free(lastptr);
+}
+treenode_t *search_tree_node(treenode_t *node, void *val, usize tsize) {
+  if (node == NULL)
+    return NULL;
+
+  treenode_t *left_node = search_tree_node(node->left, val, tsize);
+  if (left_node)
+    return left_node;
+
+  if (memcmp(node->val, val, tsize) == 0) {
+    return node;
+  }
+
+  return search_tree_node(node->right, val, tsize);
+}

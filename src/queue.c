@@ -2,8 +2,9 @@
 #include "linked.h"
 
 #include <stdlib.h>
+#include <tree.h>
 
-queue_t *queue_init(enum datatype type) {
+queue_t *queue_create(enum datatype type) {
   queue_t *res = malloc(sizeof(queue_t));
   res->tsize = type_map(type);
   res->back = NULL;
@@ -22,11 +23,10 @@ void queue_destroy(queue_t *queue) {
   free(queue);
 }
 
-// FIXME
 void enqueue(queue_t *q, void *n) {
   ASSERT(q != NULL, "Queue must not be NULL");
 
-  listnode_t *newHead = node_init(n, NULL, q->tsize);
+  listnode_t *newHead = node_create(n, NULL, q->tsize);
 
   if (q->back)
     q->back->next = newHead;
@@ -38,11 +38,12 @@ void enqueue(queue_t *q, void *n) {
   }
 }
 
-// FIXME
 void *dequeue(queue_t *q) {
   ASSERT(q->front != NULL, "Invalid queue\n");
   void *res = q->front->val;
+
   listnode_t *temp = q->front;
+
   q->front = q->front->next;
 
   if (q->front == NULL) {

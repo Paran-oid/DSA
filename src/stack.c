@@ -6,7 +6,7 @@
 
 // stack_t Datastructure was implemented through an array method
 
-stack_t *stack_init(enum datatype type) {
+stack_t *stack_create(enum datatype type) {
 
   stack_t *res = malloc(sizeof(stack_t));
   res->tsize = type_map(type);
@@ -30,7 +30,7 @@ void stack_destroy(stack_t *stack) {
 
 void push(stack_t *stack, void *el) {
 
-  listnode_t *newHead = node_init(el, stack->head, stack->tsize);
+  listnode_t *newHead = node_create(el, stack->head, stack->tsize);
   stack->head = newHead;
 }
 

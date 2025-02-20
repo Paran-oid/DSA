@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-matrix_t mat_init(usize rows, usize cols, enum datatype type) {
+matrix_t mat_create(usize rows, usize cols, enum datatype type) {
 
   matrix_t mat;
 
@@ -77,7 +77,7 @@ matrix_t mat_add(const matrix_t *mat1, const matrix_t *mat2) {
     exit(EXIT_FAILURE);
   }
 
-  matrix_t res = mat_init(mat1->rows, mat1->cols, mat1->tsize);
+  matrix_t res = mat_create(mat1->rows, mat1->cols, mat1->tsize);
 
   for (size_t i = 0; i < mat1->rows; i++) {
     for (size_t j = 0; j < mat1->cols; j++) {
@@ -95,7 +95,7 @@ matrix_t mat_mult(const matrix_t *mat1, const matrix_t *mat2) {
          "matrix "
          "to match the number of rows in the second matrix.");
 
-  matrix_t res = mat_init(mat1->rows, mat2->cols, mat1->tsize);
+  matrix_t res = mat_create(mat1->rows, mat2->cols, mat1->tsize);
 
   for (size_t i = 0; i < mat1->rows; i++) {
     for (size_t j = 0; j < mat2->cols; j++) {

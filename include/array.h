@@ -12,7 +12,7 @@ typedef struct array {
 
 // Basic Functionality
 
-array_t array_init(void *arr, usize n, enum datatype type);
+array_t array_create(void *arr, usize n, enum datatype type);
 void array_destroy(array_t *arr);
 
 // Dynamic Functionality

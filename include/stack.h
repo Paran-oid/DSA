@@ -9,7 +9,7 @@ typedef struct stack {
   enum datatype type;
 } stack_t;
 
-struct stack *stack_init(enum datatype type);
+struct stack *stack_create(enum datatype type);
 void stack_destroy(stack_t *stack);
 
 void push(stack_t *stack, void *el);

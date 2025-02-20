@@ -10,7 +10,7 @@ typedef struct queue {
 } queue_t;
 
 // Queue Operations
-queue_t *queue_init(enum datatype type);
+queue_t *queue_create(enum datatype type);
 void queue_destroy(queue_t *q);
 
 void enqueue(queue_t *q, void *n);

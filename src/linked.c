@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-listnode_t *node_init(void *val, listnode_t *next, usize tsize) {
+listnode_t *node_create(void *val, listnode_t *next, usize tsize) {
   listnode_t *head = malloc(sizeof(listnode_t));
   if (!head) {
     perror("Failed to allocate memory for linked list\n");
@@ -26,7 +26,7 @@ listnode_t *node_init(void *val, listnode_t *next, usize tsize) {
   return head;
 }
 
-list_t *list_init(enum datatype type) {
+list_t *list_create(enum datatype type) {
   list_t *res = malloc(sizeof(list_t));
   res->head = NULL;
   res->tsize = type_map(type);
@@ -46,13 +46,13 @@ void list_destroy(list_t *list) {
 }
 
 void list_begin_insert(list_t *list, void *val) {
-  listnode_t *newHead = node_init(val, NULL, list->tsize);
+  listnode_t *newHead = node_create(val, NULL, list->tsize);
   newHead->next = list->head;
   list->head = newHead;
 }
 
 void list_end_insert(list_t *list, void *val) {
-  listnode_t *newNode = node_init(val, NULL, list->tsize);
+  listnode_t *newNode = node_create(val, NULL, list->tsize);
 
   listnode_t *curr = list->head;
   while (curr->next) {
@@ -70,7 +70,7 @@ void list_pos_insert(list_t *list, usize pos, void *val) {
     pos--;
   }
 
-  listnode_t *newNode = node_init(val, NULL, list->tsize);
+  listnode_t *newNode = node_create(val, NULL, list->tsize);
 
   if (prev) {
     prev->next = newNode;
@@ -139,7 +139,7 @@ listnode_t *reverse_list(listnode_t *head) {
 listnode_t *merge_two_lists(listnode_t *head1, listnode_t *head2, usize tsize) {
   ASSERT(tsize == sizeof(i32), "Must enter values of type int\n");
 
-  listnode_t *dummy = node_init(0, NULL, tsize);
+  listnode_t *dummy = node_create(0, NULL, tsize);
   listnode_t *ptr = dummy;
 
   while (head1 && head2) {

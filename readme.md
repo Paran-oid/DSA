@@ -11,7 +11,7 @@ this library contains everything related to the topic "Data Structures and Algor
 
 ## Logger
 
-- To add looging, simply call the function `init_logger(ALL/SESSION)` _ALL to add to all-logs.txt | SESSION for just this session_
+- To add looging, simply call the function `create_logger(ALL/SESSION)` _ALL to add to all-logs.txt | SESSION for just this session_
 
 ---
 
@@ -24,6 +24,7 @@ this library contains everything related to the topic "Data Structures and Algor
 
 # TODO:
 
+- Forward every declaration and avoid using header files at any cost
 - Follow implementation structure like pthread_t where you pass item in parameter and return 0 or 1 to see if an operation was successful or not!
 - Make sure to add error checking for every malloc and make sure each gets freed
 - Make testing functionality

@@ -8,16 +8,33 @@
 #include <string.h>
 #include <time.h>
 
+void inord_trav(treenode_t *root) {
+  if (root == NULL)
+    return;
+
+  printf("%s ", (char *)root->val);
+  inord_trav(root->left);
+  inord_trav(root->right);
+}
+
 int main(void) {
 
-  logger_init(ALL);
+  logger_create(ALL);
 
-  // test stack and queue
-  // deal with all the FIXMES
-  // get rid of all TODOS and commented out code
+  // LEARN ABOUT BITFIELDS
+
+  tree_t *mytree = tree_create(STRING);
+  char *vals[] = {"aziz", "yo", "damn"};
+  for (usize i = 0; i < 3; i++) {
+    tree_insert(mytree, vals[i]);
+  }
+
+  inord_trav(mytree->root);
+
+  tree_destroy(mytree);
 
   logger_destroy();
   exit(EXIT_SUCCESS);
 }
 
-// TODO: CREATE TEST
+// TODO: CREATE TESTS

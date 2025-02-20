@@ -15,6 +15,7 @@ set(SRC
   src/array.c
   src/tree.c
   src/map.c
+  src/hash.c
   )
 
 set(INCLUDE 
