@@ -21,17 +21,6 @@ int main(void) {
 
   logger_create(ALL);
 
-  // LEARN ABOUT BITFIELDS
-
-  tree_t *mytree = tree_create(STRING);
-  char *vals[] = {"aziz", "yo", "damn"};
-  for (usize i = 0; i < 3; i++) {
-    tree_insert(mytree, vals[i]);
-  }
-
-  inord_trav(mytree->root);
-
-  tree_destroy(mytree);
 
   logger_destroy();
   exit(EXIT_SUCCESS);

@@ -3,31 +3,41 @@ project(DSA)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_BUILD_TYPE Debug)
 
-set(SRC
-  main.c
-  src/bits.c
-  src/matrix.c
-  src/funcs.c
-  src/linked.c
-  src/stack.c
-  src/logs.c
-  src/queue.c
-  src/array.c
-  src/tree.c
-  src/map.c
-  src/hash.c
-  )
-
-set(INCLUDE 
-  include
+# Gather all .c source files
+file(GLOB_RECURSE SRC
+  "Array/*.c"
+  "Bits/*.c"
+  "Hash/*.c"
+  "Linked Lists/*.c"
+  "Map/*.c"
+  "Matrix/*.c"
+  "Queue/*.c"
+  "Stack/*.c"
+  "Tree/*.c"
+  "Utils/*.c"
+  "main.c"
 )
+
+set(INCLUDE_DIRS   
+  "${CMAKE_SOURCE_DIR}/Array"
+  "${CMAKE_SOURCE_DIR}/Bits"
+  "${CMAKE_SOURCE_DIR}/Hash"
+  "${CMAKE_SOURCE_DIR}/Linked Lists"
+  "${CMAKE_SOURCE_DIR}/Map"
+  "${CMAKE_SOURCE_DIR}/Matrix"
+  "${CMAKE_SOURCE_DIR}/Queue"
+  "${CMAKE_SOURCE_DIR}/Stack"
+  "${CMAKE_SOURCE_DIR}/Tree"
+  "${CMAKE_SOURCE_DIR}/Utils")
 
 add_executable(DSA ${SRC})
 
-target_include_directories(DSA PRIVATE ${INCLUDE})
+# Tell the compiler where to find .h files (directories, not files!)
+target_include_directories(DSA PRIVATE
+  ${INCLUDE_DIRS}
+)
 
-# These are really important to be sure that I am writing safe and robust code
-
+# Compiler options
 target_compile_options(DSA PRIVATE
   -Wall
   -Wextra
@@ -37,7 +47,7 @@ target_compile_options(DSA PRIVATE
   -O2
 )
 
-add_custom_target(RUN ALL
-COMMAND echo
-COMMAND "./DSA" 
-COMMAND echo)
+# (Optional) custom run target
+# add_custom_target(RUN ALL
+#   COMMAND "./DSA"
+# )
