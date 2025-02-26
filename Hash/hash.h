@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 uint32_t hash(HashTable *ht, char *item);
-HashNode *hash_node_create(char *key, void *val, HashNode *next);
+HashNode *hash_node_create(HashTable *ht, void *key, void *val, HashNode *next);
 
 HashTable hash_table_create(DataType type1, DataType type2);
 void hash_table_destroy(HashTable *ht);
