@@ -1,23 +1,25 @@
 #include "array.h"
+#include "funcs.h"
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
 // basic functionality
 
-array_t array_create(void *arr, usize size, enum datatype type) {
+Array array_create(void *arr, size_t size, DataType type) {
   ASSERT(size != 0, "number of elements in array size can't be \n");
   ASSERT(arr != NULL, "array passed is NULL \n");
 
-  array_t res = {0};
-  usize elsize = type_map(type);
+  Array res = {0};
+  size_t elsize = type_map(type);
 
   if (!arr) {
     void *ownArr = calloc(size, elsize);
     ASSERT(ownArr != NULL, "couldn't allocate memory for the array");
     res.data = ownArr;
     res.size = res.capacity = 0;
-    res.tsize = elsize;
+    res.element_size = elsize;
   }
   void *ownArr = malloc(size * elsize);
 
@@ -26,7 +28,7 @@ array_t array_create(void *arr, usize size, enum datatype type) {
   memcpy(ownArr, arr, size * elsize);
 
   res.data = ownArr;
-  res.tsize = elsize;
+  res.element_size = elsize;
 
   res.size = size;
   res.capacity = size;
@@ -34,36 +36,38 @@ array_t array_create(void *arr, usize size, enum datatype type) {
   return res;
 }
 
-void array_destroy(array_t *arr) { free(arr->data); }
+void array_destroy(Array *arr) { free(arr->data); }
 
 // Dynamic Functionality
 
-void *array_get(const array_t *arr, i32 index) {
+void *array_get(const Array *arr, int index) {
   ASSERT(arr && arr->data, "Null/Null data passed\n");
-  ASSERT(index >= 0 && index < (i32)arr->size, "Index out of range");
-  return (char *)arr->data + (index * arr->tsize);
+  ASSERT(index >= 0 && index < (int)arr->size, "Index out of range");
+  return (char *)arr->data + (index * arr->element_size);
 }
-void array_set(array_t *arr, i32 index, void *item) {
+void array_set(Array *arr, int index, void *item) {
   ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uncreateialized");
-  ASSERT(index > 0 && index < (i32)arr->size, "Index out of range");
-  memcpy((char *)arr->data + index * arr->tsize, item, arr->tsize);
+  ASSERT(index > 0 && index < (int)arr->size, "Index out of range");
+  memcpy((char *)arr->data + index * arr->element_size, item,
+         arr->element_size);
 }
-void array_pushback(array_t *arr, void *item) {
+void array_pushback(Array *arr, void *item) {
   ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uncreateialized");
   if (arr->size == arr->capacity)
     array_resize(arr);
 
-  memcpy((char *)arr->data + arr->size * arr->tsize, item, arr->tsize);
+  memcpy((char *)arr->data + arr->size * arr->element_size, item,
+         arr->element_size);
   arr->size++;
 }
-void *array_popback(array_t *arr) {
+void *array_popback(Array *arr) {
   ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uncreateialized");
   ASSERT(arr->size > 0, "Array is empty when you tried to pop it...\n");
-  void *res = (char *)arr->data + (arr->size - 1) * arr->tsize;
+  void *res = (char *)arr->data + (arr->size - 1) * arr->element_size;
   arr->size--;
   return res;
 }
-void array_resize(array_t *arr) {
+void array_resize(Array *arr) {
   ASSERT(arr != NULL && arr->data != NULL, "Array is NULL or uncreateialized");
   arr->capacity = arr->capacity == 0 ? 1 : 2 * arr->capacity;
   arr->data = realloc(arr->data, arr->capacity);
@@ -76,11 +80,12 @@ void array_resize(array_t *arr) {
 
 // Search Algorithms
 
-bool binary_search(array_t *arr, void *item) {
-  i32 l = 0, r = arr->size - 1;
+bool binary_search(Array *arr, void *item) {
+  int l = 0, r = arr->size - 1;
   while (l <= r) {
-    i32 mid = l + (r - l) / 2;
-    i32 comp = memcmp((char *)arr->data + mid * arr->tsize, item, arr->tsize);
+    int mid = l + (r - l) / 2;
+    int comp = memcmp((char *)arr->data + mid * arr->element_size, item,
+                      arr->element_size);
     if (comp == 0) {
       return true;
     } else if (comp < 0) {
@@ -92,9 +97,10 @@ bool binary_search(array_t *arr, void *item) {
   return false;
 }
 
-bool linear_search(array_t *arr, void *item) {
-  for (usize i = 0; i < arr->size; i++) {
-    if (memcmp((char *)arr->data + i * arr->tsize, item, arr->tsize) == 0) {
+bool linear_search(Array *arr, void *item) {
+  for (size_t i = 0; i < arr->size; i++) {
+    if (memcmp((char *)arr->data + i * arr->element_size, item,
+               arr->element_size) == 0) {
       return true;
     }
   }
@@ -103,44 +109,51 @@ bool linear_search(array_t *arr, void *item) {
 
 // Sort Algorithms
 
-void selection_sort(array_t *arr, bool isAscending) {
-  for (usize i = 0; i < arr->size; i++) {
-    usize diff = i;
-    for (usize j = i + 1; j < arr->size; j++) {
-      i32 res = memcmp((char *)arr->data + j * arr->tsize,
-                       (char *)arr->data + diff * arr->tsize, arr->tsize);
+void selection_sort(Array *arr, bool isAscending) {
+  for (size_t i = 0; i < arr->size; i++) {
+    size_t diff = i;
+    for (size_t j = i + 1; j < arr->size; j++) {
+      int res = memcmp((char *)arr->data + j * arr->element_size,
+                       (char *)arr->data + diff * arr->element_size,
+                       arr->element_size);
       if ((!isAscending && res < 0) || (isAscending && res > 0)) {
         diff = j;
       }
     }
-    if (memcmp((char *)arr->data + i * arr->tsize,
-               (char *)arr->data + diff * arr->tsize, arr->tsize) != 0) {
-      void *temp = malloc(arr->tsize);
-      memcpy(temp, (char *)arr->data + i * arr->tsize, arr->tsize);
-      memcpy((char *)arr->data + i * arr->tsize,
-             (char *)arr->data + diff * arr->tsize, arr->tsize);
-      memcpy((char *)arr->data + diff * arr->tsize, temp, arr->tsize);
+    if (memcmp((char *)arr->data + i * arr->element_size,
+               (char *)arr->data + diff * arr->element_size,
+               arr->element_size) != 0) {
+      void *temp = malloc(arr->element_size);
+      memcpy(temp, (char *)arr->data + i * arr->element_size,
+             arr->element_size);
+      memcpy((char *)arr->data + i * arr->element_size,
+             (char *)arr->data + diff * arr->element_size, arr->element_size);
+      memcpy((char *)arr->data + diff * arr->element_size, temp,
+             arr->element_size);
       free(temp);
     }
   }
 }
 
-void bubble_sort(array_t *arr, bool isAscending) {
+void bubble_sort(Array *arr, bool isAscending) {
   bool isSorted = false;
-  isize tempN = arr->size;
+  int tempN = arr->size;
   while (!isSorted) {
     isSorted = true;
-    for (isize i = 1; i < tempN; i++) {
-      i32 res = memcmp((char *)arr->data + (i - 1) * arr->tsize,
-                       (char *)arr->data + i * arr->tsize, arr->tsize);
+    for (int i = 1; i < tempN; i++) {
+      int res =
+          memcmp((char *)arr->data + (i - 1) * arr->element_size,
+                 (char *)arr->data + i * arr->element_size, arr->element_size);
 
       if ((res < 0 && !isAscending) || (res > 0 && isAscending)) {
         isSorted = false;
-        void *temp = malloc(arr->tsize);
-        memcpy(temp, (char *)arr->data + (i - 1) * arr->tsize, arr->tsize);
-        memcpy((char *)arr->data + (i - 1) * arr->tsize,
-               (char *)arr->data + i * arr->tsize, arr->tsize);
-        memcpy((char *)arr->data + i * arr->tsize, temp, arr->tsize);
+        void *temp = malloc(arr->element_size);
+        memcpy(temp, (char *)arr->data + (i - 1) * arr->element_size,
+               arr->element_size);
+        memcpy((char *)arr->data + (i - 1) * arr->element_size,
+               (char *)arr->data + i * arr->element_size, arr->element_size);
+        memcpy((char *)arr->data + i * arr->element_size, temp,
+               arr->element_size);
         free(temp);
       }
     }
@@ -148,35 +161,39 @@ void bubble_sort(array_t *arr, bool isAscending) {
   }
 }
 
-void insertion_sort(array_t *arr, bool isAscending) {
-  void *temp = malloc(arr->tsize);
-  for (usize i = 1; i < arr->size; i++) {
-    memcpy(temp, (char *)arr->data + i * arr->tsize, arr->tsize);
-    isize j = i - 1;
+void insertion_sort(Array *arr, bool isAscending) {
+  void *temp = malloc(arr->element_size);
+  for (size_t i = 1; i < arr->size; i++) {
+    memcpy(temp, (char *)arr->data + i * arr->element_size, arr->element_size);
+    int j = i - 1;
 
     while (j >= 0) {
-      i32 res = memcmp((char *)arr->data + j * arr->tsize, temp, arr->tsize);
+      int res = memcmp((char *)arr->data + j * arr->element_size, temp,
+                       arr->element_size);
       if (!((res < 0 && !isAscending) || (res > 0 && isAscending))) {
         break;
       }
-      memcpy((char *)arr->data + (j + 1) * arr->tsize,
-             (char *)arr->data + j * arr->tsize, arr->tsize);
+      memcpy((char *)arr->data + (j + 1) * arr->element_size,
+             (char *)arr->data + j * arr->element_size, arr->element_size);
       j--;
     }
-    memcpy((char *)arr->data + (j + 1) * arr->tsize, temp, arr->tsize);
+    memcpy((char *)arr->data + (j + 1) * arr->element_size, temp,
+           arr->element_size);
   }
   free(temp);
 }
 
-void cycle_sort(array_t *arr, bool isAscending) {
-  void *temp = malloc(arr->tsize);
+void cycle_sort(Array *arr, bool isAscending) {
+  void *temp = malloc(arr->element_size);
 
-  for (usize cycle_start = 0; cycle_start < arr->size - 1; cycle_start++) {
-    memcpy(temp, (char *)arr->data + cycle_start * arr->tsize, arr->tsize);
+  for (size_t cycle_start = 0; cycle_start < arr->size - 1; cycle_start++) {
+    memcpy(temp, (char *)arr->data + cycle_start * arr->element_size,
+           arr->element_size);
 
-    usize pos = cycle_start;
-    for (usize i = cycle_start + 1; i < arr->size; i++) {
-      i32 comp = memcmp((char *)arr->data + i * arr->tsize, temp, arr->tsize);
+    size_t pos = cycle_start;
+    for (size_t i = cycle_start + 1; i < arr->size; i++) {
+      int comp = memcmp((char *)arr->data + i * arr->element_size, temp,
+                        arr->element_size);
       if ((isAscending && comp < 0) || (!isAscending && comp > 0)) {
         pos++;
       }
@@ -186,31 +203,35 @@ void cycle_sort(array_t *arr, bool isAscending) {
       continue;
     }
 
-    while (memcmp((char *)arr->data + pos * arr->tsize, temp, arr->tsize) ==
-           0) {
+    while (memcmp((char *)arr->data + pos * arr->element_size, temp,
+                  arr->element_size) == 0) {
       pos++;
     }
 
     if (pos != cycle_start) {
-      swap((char *)arr->data + pos * arr->tsize, temp, arr->tsize);
+      swap((char *)arr->data + pos * arr->element_size, temp,
+           arr->element_size);
     }
 
     while (pos != cycle_start) {
       pos = cycle_start;
-      for (usize i = cycle_start + 1; i < arr->size; i++) {
-        i32 comp = memcmp((char *)arr->data + i * arr->tsize, temp, arr->tsize);
+      for (size_t i = cycle_start + 1; i < arr->size; i++) {
+        int comp = memcmp((char *)arr->data + i * arr->element_size, temp,
+                          arr->element_size);
         if ((isAscending && comp < 0) || (!isAscending && comp > 0)) {
           pos++;
         }
       }
 
-      while (memcmp((char *)arr->data + pos * arr->tsize, temp, arr->tsize) ==
-             0) {
+      while (memcmp((char *)arr->data + pos * arr->element_size, temp,
+                    arr->element_size) == 0) {
         pos++;
       }
 
-      if (memcmp(temp, (char *)arr->data + pos * arr->tsize, arr->tsize) != 0) {
-        swap(temp, (char *)arr->data + pos * arr->tsize, arr->tsize);
+      if (memcmp(temp, (char *)arr->data + pos * arr->element_size,
+                 arr->element_size) != 0) {
+        swap(temp, (char *)arr->data + pos * arr->element_size,
+             arr->element_size);
       }
     }
   }
@@ -220,34 +241,38 @@ void cycle_sort(array_t *arr, bool isAscending) {
 
 // Quick Sort
 
-static isize partition(array_t *arr, isize low, isize high, bool isAscending) {
-  isize i = low - 1;
-  for (isize j = low; j < high; j++) {
-    i32 res = memcmp((char *)arr->data + j * arr->tsize,
-                     (char *)arr->data + high * arr->tsize, arr->tsize);
+static int partition(Array *arr, int low, int high, bool isAscending) {
+  int i = low - 1;
+  for (int j = low; j < high; j++) {
+    int res =
+        memcmp((char *)arr->data + j * arr->element_size,
+               (char *)arr->data + high * arr->element_size, arr->element_size);
     if ((res < 0 && isAscending) || (res >= 0 && !isAscending)) {
       i++;
-      void *temp = malloc(arr->tsize);
-      memcpy(temp, (char *)arr->data + i * arr->tsize, arr->tsize);
-      memcpy((char *)arr->data + i * arr->tsize,
-             (char *)arr->data + j * arr->tsize, arr->tsize);
-      memcpy((char *)arr->data + j * arr->tsize, temp, arr->tsize);
+      void *temp = malloc(arr->element_size);
+      memcpy(temp, (char *)arr->data + i * arr->element_size,
+             arr->element_size);
+      memcpy((char *)arr->data + i * arr->element_size,
+             (char *)arr->data + j * arr->element_size, arr->element_size);
+      memcpy((char *)arr->data + j * arr->element_size, temp,
+             arr->element_size);
       free(temp);
     }
   }
-  void *temp = malloc(arr->tsize);
-  memcpy(temp, (char *)arr->data + (i + 1) * arr->tsize, arr->tsize);
-  memcpy((char *)arr->data + (i + 1) * arr->tsize,
-         (char *)arr->data + high * arr->tsize, arr->tsize);
-  memcpy((char *)arr->data + high * arr->tsize, temp, arr->tsize);
+  void *temp = malloc(arr->element_size);
+  memcpy(temp, (char *)arr->data + (i + 1) * arr->element_size,
+         arr->element_size);
+  memcpy((char *)arr->data + (i + 1) * arr->element_size,
+         (char *)arr->data + high * arr->element_size, arr->element_size);
+  memcpy((char *)arr->data + high * arr->element_size, temp, arr->element_size);
   free(temp);
 
   return i + 1;
 }
 
-void quick_sort(array_t *arr, isize low, isize high, bool isAscending) {
+void quick_sort(Array *arr, int low, int high, bool isAscending) {
   if (low < high) {
-    isize pivot = partition(arr, low, high, isAscending);
+    int pivot = partition(arr, low, high, isAscending);
     quick_sort(arr, low, pivot - 1, isAscending);
     quick_sort(arr, pivot + 1, high, isAscending);
   }
@@ -255,44 +280,45 @@ void quick_sort(array_t *arr, isize low, isize high, bool isAscending) {
 
 // Merge Sort
 
-static void merge(array_t *arr, isize l, isize m, isize r, bool isAscending) {
-  isize n1 = m - l + 1;
-  isize n2 = r - m;
+static void merge(Array *arr, int l, int m, int r, bool isAscending) {
+  int n1 = m - l + 1;
+  int n2 = r - m;
 
-  void *L = malloc(n1 * arr->tsize);
-  void *R = malloc(n2 * arr->tsize);
+  void *L = malloc(n1 * arr->element_size);
+  void *R = malloc(n2 * arr->element_size);
 
-  memcpy(L, (char *)arr->data + l * arr->tsize, n1 * arr->tsize);
-  memcpy(R, (char *)arr->data + (m + 1) * arr->tsize, n2 * arr->tsize);
+  memcpy(L, (char *)arr->data + l * arr->element_size, n1 * arr->element_size);
+  memcpy(R, (char *)arr->data + (m + 1) * arr->element_size,
+         n2 * arr->element_size);
 
-  isize i = 0, j = 0, k = l;
+  int i = 0, j = 0, k = l;
 
   while (i < n1 && j < n2) {
-    i32 comp = memcmp((char *)L + i * arr->tsize, (char *)R + j * arr->tsize,
-                      arr->tsize);
+    int comp = memcmp((char *)L + i * arr->element_size,
+                      (char *)R + j * arr->element_size, arr->element_size);
 
     if ((isAscending && comp <= 0) || (!isAscending && comp > 0)) {
-      memcpy((char *)arr->data + k * arr->tsize, (char *)L + i * arr->tsize,
-             arr->tsize);
+      memcpy((char *)arr->data + k * arr->element_size,
+             (char *)L + i * arr->element_size, arr->element_size);
       i++;
     } else {
-      memcpy((char *)arr->data + k * arr->tsize, (char *)R + j * arr->tsize,
-             arr->tsize);
+      memcpy((char *)arr->data + k * arr->element_size,
+             (char *)R + j * arr->element_size, arr->element_size);
       j++;
     }
     k++;
   }
 
   while (i < n1) {
-    memcpy((char *)arr->data + k * arr->tsize, (char *)L + i * arr->tsize,
-           arr->tsize);
+    memcpy((char *)arr->data + k * arr->element_size,
+           (char *)L + i * arr->element_size, arr->element_size);
     i++;
     k++;
   }
 
   while (j < n2) {
-    memcpy((char *)arr->data + k * arr->tsize, (char *)R + j * arr->tsize,
-           arr->tsize);
+    memcpy((char *)arr->data + k * arr->element_size,
+           (char *)R + j * arr->element_size, arr->element_size);
     j++;
     k++;
   }
@@ -301,9 +327,9 @@ static void merge(array_t *arr, isize l, isize m, isize r, bool isAscending) {
   free(R);
 }
 
-void merge_sort(array_t *arr, isize l, isize r, bool isAscending) {
+void merge_sort(Array *arr, int l, int r, bool isAscending) {
   if (l < r) {
-    isize m = l + (r - l) / 2;
+    int m = l + (r - l) / 2;
     merge_sort(arr, l, m, isAscending);
     merge_sort(arr, m + 1, r, isAscending);
     merge(arr, l, m, r, isAscending);

@@ -1,30 +1,15 @@
 #pragma once
 
-#include "funcs.h"
+#include "models.h"
 
-typedef struct treenode {
-  void *val;
-  struct treenode *right;
-  struct treenode *left;
-  usize tsize;
-} treenode_t;
+TreeNode *treenode_create(void *val, TreeNode *left, TreeNode *right,
+                          size_t element_size);
 
-typedef struct tree {
-  treenode_t *root;
-  usize tsize;
-  enum datatype type;
-} tree_t;
+Tree *tree_create(DataType type);
+void treenode_destroy(TreeNode *node);
+void tree_destroy(Tree *tree);
 
-typedef enum traverse_mode { INORD, PRE, POST, LEVEL } traverse_mode_t;
-
-treenode_t *treenode_create(void *val, treenode_t *left, treenode_t *right,
-                            usize tsize);
-
-tree_t *tree_create(enum datatype type);
-void treenode_destroy(treenode_t *node);
-void tree_destroy(tree_t *tree);
-
-treenode_t *tree_parent(treenode_t *tree, void *val, usize tsize);
-void tree_insert(tree_t *tree, void *val);
-void tree_delete(tree_t *tree, void *val);
-treenode_t *search_tree_node(treenode_t *node, void *val, usize tsize);
+TreeNode *tree_parent(TreeNode *tree, void *val, size_t element_size);
+void tree_insert(Tree *tree, void *val);
+void tree_delete(Tree *tree, void *val);
+TreeNode *search_tree_node(TreeNode *node, void *val, size_t element_size);

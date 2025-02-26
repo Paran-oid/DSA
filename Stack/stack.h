@@ -1,17 +1,10 @@
 #pragma once
 
-#include "funcs.h"
-#include "linked.h"
+#include "models.h"
 
-typedef struct stack {
-  listnode_t **items, *head, *tail;
-  usize tsize;
-  enum datatype type;
-} stack_t;
+Stack *stack_create(DataType type);
+void stack_destroy(Stack *stack);
 
-struct stack *stack_create(enum datatype type);
-void stack_destroy(stack_t *stack);
-
-void push(stack_t *stack, void *el);
-void *pop(stack_t *stack);
-void *speek(const stack_t *stack);
+void push(Stack *stack, void *el);
+void *pop(Stack *stack);
+void *speek(const Stack *stack);

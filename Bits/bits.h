@@ -1,22 +1,22 @@
 #pragma once
 
-#include <funcs.h>
+typedef struct _size_t size_t;
 
-usize bit_extract(usize num, usize pos);
-usize bits_extract(usize num, usize l, usize r);
+size_t bit_extract(size_t num, size_t pos);
+size_t bits_extract(size_t num, size_t l, size_t r);
 
-usize bit_set(usize num, usize pos);
-usize bits_set(usize num, usize l, usize r);
+size_t bit_set(size_t num, size_t pos);
+size_t bits_set(size_t num, size_t l, size_t r);
 
-usize bit_clear(usize num, usize pos);
-usize bits_clear(usize num, usize l, usize r);
+size_t bit_clear(size_t num, size_t pos);
+size_t bits_clear(size_t num, size_t l, size_t r);
 
-usize bit_toggle(usize num, usize pos);
-usize bits_toggle(usize num, usize l, usize r);
+size_t bit_toggle(size_t num, size_t pos);
+size_t bits_toggle(size_t num, size_t l, size_t r);
 
-usize bits_count(usize num);
+size_t bits_count(size_t num);
 
-void bits_print_binary(usize num);
+void bits_print_binary(size_t num);
 
 // TODO: make sure I check every malloc was successful
 // TODO: make it print negative binaries too

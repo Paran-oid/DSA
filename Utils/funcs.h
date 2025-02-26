@@ -1,26 +1,6 @@
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-
-typedef float f32;
-typedef double f64;
-
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef int8_t i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
-
-typedef size_t usize;
-typedef ssize_t isize;
+#include "models.h"
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -32,15 +12,6 @@ typedef ssize_t isize;
     }                                                                          \
   } while (0)
 
-enum datatype { CHAR, INT, FLOAT, DOUBLE, STRING, PAIR, NODE, TREENODE };
-
-typedef struct pair {
-  void *first;
-  void *second;
-  usize tsize;
-  enum datatype type;
-} pair_t;
-
-usize type_map(enum datatype type);
-enum datatype totype(usize size);
-void swap(void *arg1, void *arg2, enum datatype type);
+size_t type_map(DataType type);
+DataType to_type(size_t size);
+void swap(void *arg1, void *arg2, DataType type);

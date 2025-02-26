@@ -1,49 +1,25 @@
 #pragma once
 
-#include "funcs.h"
+#include "models.h"
+
 #include <stdbool.h>
 
-// SINGLE LINKED LIST (CIRCULAR & NORMAL)
-typedef struct listnode {
-  void *val;
-  struct listnode *next;
-  usize tsize;
-} listnode_t;
+ListNode *node_create(void *val, ListNode *next, size_t element_size);
+List *list_create(DataType type);
+void list_destroy(List *list);
 
-// DOUBLY LINKED LIST
-typedef struct dlistnode {
-  void *val;
-  struct dlistnode *next;
-  struct dlistnode *prev;
-  usize tsize;
-} dlistnode_t;
+void list_begin_insert(List *list, void *val);
+void list_pos_insert(List *list, size_t pos, void *val);
+void list_end_insert(List *list, void *val);
 
-typedef struct list {
-  listnode_t *head;
-  usize tsize;
-  enum datatype type;
-} list_t;
-
-typedef struct dlist {
-  dlistnode_t *head;
-  usize tsize;
-} dlist_t;
-
-listnode_t *node_create(void *val, listnode_t *next, usize tsize);
-list_t *list_create(enum datatype type);
-void list_destroy(list_t *list);
-
-void list_begin_insert(list_t *list, void *val);
-void list_pos_insert(list_t *list, usize pos, void *val);
-void list_end_insert(list_t *list, void *val);
-
-void list_begin_delete(list_t *list);
-void list_end_delete(list_t *list);
-void list_pos_delete(list_t *list, usize pos);
+void list_begin_delete(List *list);
+void list_end_delete(List *list);
+void list_pos_delete(List *list, size_t pos);
 
 /*
   LeetCode Section - Singly Linked List Problems
 */
-listnode_t *reverse_list(listnode_t *head);
-listnode_t *merge_two_lists(listnode_t *head1, listnode_t *head2, usize tsize);
-bool has_cycle(listnode_t *head);
+ListNode *reverse_list(ListNode *head);
+ListNode *merge_two_lists(ListNode *head1, ListNode *head2,
+                          size_t element_size);
+bool has_cycle(ListNode *head);

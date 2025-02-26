@@ -1,5 +1,6 @@
 #include "logs.h"
 #include "funcs.h"
+#include "models.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,9 +12,9 @@
 #include <pthread.h>
 #include <unistd.h>
 
-static logger_t logger;
+static Logger logger;
 
-void logger_create(enum logdate date) {
+void logger_create(LogDateType date) {
   time_t t;
   time(&t);
   char dateBuf[255];
@@ -22,10 +23,10 @@ void logger_create(enum logdate date) {
   char *type;
   char logPath[1000];
 
-  if (date == ALL) {
+  if (date == LOG_DATE_ALL) {
     snprintf(logPath, sizeof(logPath), "../logs/all-logs.txt");
     type = "a";
-  } else if (date == SESSION) {
+  } else if (date == LOG_DATE_SESSION) {
     snprintf(logPath, sizeof(logPath), "../logs/session/[%s]-logs.txt",
              dateBuf);
   }
@@ -48,11 +49,11 @@ void logger_create(enum logdate date) {
   }
 
   logger.file = fopen(logPath, type);
-  pthread_mutex_init(&logger.logMutex, NULL);
+  pthread_mutex_init(&logger.log_mutex, NULL);
 }
-void logger_message(enum logtype type, const char *file, i32 line,
+void logger_message(LogType type, const char *file, int line,
                     const char *mess) {
-  pthread_mutex_lock(&logger.logMutex);
+  pthread_mutex_lock(&logger.log_mutex);
 
   ASSERT(logger.file != NULL, "logger wasn't properly createialized...\n");
   ASSERT(mess != NULL, "please enter a logging message...\n");
@@ -60,17 +61,20 @@ void logger_message(enum logtype type, const char *file, i32 line,
   char *typeStr = "";
 
   switch (type) {
-  case INFORMATION:
+  case LOG_TYPE_INFORMATION:
     typeStr = "INFO";
     break;
 
-  case WARNING:
+  case LOG_TYPE_WARNING:
     typeStr = "WARN";
     break;
 
-  case DANGER:
+  case LOG_TYPE_DANGER:
     typeStr = "DANGER";
     break;
+  default:
+    perror("Invalid logging type\n");
+    exit(EXIT_FAILURE);
   }
 
   time_t t;
@@ -84,7 +88,7 @@ void logger_message(enum logtype type, const char *file, i32 line,
            typeStr, file, line, mess);
 
   fprintf(logger.file, "%s", outputBuff);
-  pthread_mutex_unlock(&logger.logMutex);
+  pthread_mutex_unlock(&logger.log_mutex);
 }
 void logger_destroy() {
   if (logger.file) {
@@ -92,8 +96,8 @@ void logger_destroy() {
     logger.file = NULL; // Prevent use-after-free
   }
 
-  if (pthread_mutex_trylock(&logger.logMutex) == 0) {
-    pthread_mutex_unlock(&logger.logMutex);
-    pthread_mutex_destroy(&logger.logMutex);
+  if (pthread_mutex_trylock(&logger.log_mutex) == 0) {
+    pthread_mutex_unlock(&logger.log_mutex);
+    pthread_mutex_destroy(&logger.log_mutex);
   }
 }

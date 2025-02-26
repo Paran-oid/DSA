@@ -1,23 +1,16 @@
 #pragma once
 
-#include "funcs.h"
-#include <stddef.h>
-
-typedef struct matrix {
-  void **items;
-  usize rows, cols, tsize;
-  enum datatype type;
-} matrix_t;
+#include "models.h"
 
 // Matrix createialization & Destruction
-matrix_t mat_create(usize rows, usize cols, enum datatype type);
-void mat_fill(matrix_t *mat, const void *arr, usize n);
-void mat_destroy(matrix_t *mat);
+Matrix mat_create(size_t rows, size_t cols, DataType type);
+void mat_fill(Matrix *mat, const void *arr, size_t n);
+void mat_destroy(Matrix *mat);
 
 // Matrix Operations
-i32 mat_det(const matrix_t *mat);
-matrix_t mat_add(const matrix_t *mat1, const matrix_t *mat2);
-matrix_t mat_mult(const matrix_t *mat1, const matrix_t *mat2);
-// void mat_rot(matrix_t *mat);
+int mat_det(const Matrix *mat);
+Matrix mat_add(const Matrix *mat1, const Matrix *mat2);
+Matrix mat_mult(const Matrix *mat1, const Matrix *mat2);
+// void mat_rot(Matrix *mat);
 
 // LEETCODE SECTION

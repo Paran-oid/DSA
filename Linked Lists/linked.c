@@ -1,76 +1,77 @@
 #include "linked.h"
+#include "funcs.h"
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-listnode_t *node_create(void *val, listnode_t *next, usize tsize) {
-  listnode_t *head = malloc(sizeof(listnode_t));
+ListNode *node_create(void *val, ListNode *next, size_t element_size) {
+  ListNode *head = malloc(sizeof(ListNode));
   if (!head) {
     perror("Failed to allocate memory for linked list\n");
     exit(EXIT_FAILURE);
   }
 
-  head->val = malloc(tsize);
-  if (!head->val) {
+  head->value = malloc(element_size);
+  if (!head->value) {
     perror("Failed to allocate memory for linked list value...\n");
     free(head);
     exit(EXIT_FAILURE);
   }
 
-  memcpy(head->val, val, tsize);
+  memcpy(head->value, val, element_size);
   head->next = next;
-  head->tsize = tsize;
+  head->element_size = element_size;
 
   return head;
 }
 
-list_t *list_create(enum datatype type) {
-  list_t *res = malloc(sizeof(list_t));
+List *list_create(DataType type) {
+  List *res = malloc(sizeof(List));
   res->head = NULL;
-  res->tsize = type_map(type);
+  res->element_size = type_map(type);
   res->type = type;
 
   return res;
 }
 
-void list_destroy(list_t *list) {
-  listnode_t *node = list->head;
+void list_destroy(List *list) {
+  ListNode *node = list->head;
   while (node != NULL) {
-    listnode_t *temp = node;
+    ListNode *temp = node;
     node = node->next;
     free(temp);
   }
   free(list);
 }
 
-void list_begin_insert(list_t *list, void *val) {
-  listnode_t *newHead = node_create(val, NULL, list->tsize);
+void list_begin_insert(List *list, void *val) {
+  ListNode *newHead = node_create(val, NULL, list->element_size);
   newHead->next = list->head;
   list->head = newHead;
 }
 
-void list_end_insert(list_t *list, void *val) {
-  listnode_t *newNode = node_create(val, NULL, list->tsize);
+void list_end_insert(List *list, void *val) {
+  ListNode *newNode = node_create(val, NULL, list->element_size);
 
-  listnode_t *curr = list->head;
+  ListNode *curr = list->head;
   while (curr->next) {
     curr = curr->next;
   }
 
   curr->next = newNode;
 }
-void list_pos_insert(list_t *list, usize pos, void *val) {
-  listnode_t *prev = NULL;
-  listnode_t *curr = list->head;
+void list_pos_insert(List *list, size_t pos, void *val) {
+  ListNode *prev = NULL;
+  ListNode *curr = list->head;
   while (pos > 0 && curr->next) {
     prev = curr;
     curr = curr->next;
     pos--;
   }
 
-  listnode_t *newNode = node_create(val, NULL, list->tsize);
+  ListNode *newNode = node_create(val, NULL, list->element_size);
 
   if (prev) {
     prev->next = newNode;
@@ -81,17 +82,17 @@ void list_pos_insert(list_t *list, usize pos, void *val) {
   }
 }
 
-void list_begin_delete(list_t *list) {
-  listnode_t *temp = list->head;
+void list_begin_delete(List *list) {
+  ListNode *temp = list->head;
   list->head = list->head->next;
   free(temp);
 }
-void list_end_delete(list_t *list) {
+void list_end_delete(List *list) {
   if (!list->head)
     return;
 
-  listnode_t *curr = list->head;
-  listnode_t *prev = NULL;
+  ListNode *curr = list->head;
+  ListNode *prev = NULL;
   while (curr->next) {
     prev = curr;
     curr = curr->next;
@@ -105,9 +106,9 @@ void list_end_delete(list_t *list) {
     free(curr);
   }
 }
-void list_pos_delete(list_t *list, usize pos) {
-  listnode_t *curr = list->head;
-  listnode_t *prev = NULL;
+void list_pos_delete(List *list, size_t pos) {
+  ListNode *curr = list->head;
+  ListNode *prev = NULL;
   while (pos > 0 && curr->next) {
     prev = curr;
     curr = curr->next;
@@ -125,25 +126,26 @@ void list_pos_delete(list_t *list, usize pos) {
 
 // LEETCODE SECTION
 
-listnode_t *reverse_list(listnode_t *head) {
-  listnode_t *prev = NULL;
-  listnode_t *curr = head;
+ListNode *reverse_list(ListNode *head) {
+  ListNode *prev = NULL;
+  ListNode *curr = head;
   while (curr) {
-    listnode_t *temp = curr->next;
+    ListNode *temp = curr->next;
     curr->next = prev;
     prev = curr;
     curr = temp;
   }
   return prev;
 }
-listnode_t *merge_two_lists(listnode_t *head1, listnode_t *head2, usize tsize) {
-  ASSERT(tsize == sizeof(i32), "Must enter values of type int\n");
+ListNode *merge_two_lists(ListNode *head1, ListNode *head2,
+                          size_t element_size) {
+  ASSERT(element_size == sizeof(int), "Must enter values of type int\n");
 
-  listnode_t *dummy = node_create(0, NULL, tsize);
-  listnode_t *ptr = dummy;
+  ListNode *dummy = node_create(0, NULL, element_size);
+  ListNode *ptr = dummy;
 
   while (head1 && head2) {
-    if (head1->val < head2->val) {
+    if (head1->value < head2->value) {
       ptr->next = head1;
       head1 = head1->next;
       ptr = ptr->next;
@@ -169,9 +171,9 @@ listnode_t *merge_two_lists(listnode_t *head1, listnode_t *head2, usize tsize) {
   return dummy->next;
 }
 
-bool has_cycle(listnode_t *head) {
-  listnode_t *slow = head;
-  listnode_t *fast = head;
+bool has_cycle(ListNode *head) {
+  ListNode *slow = head;
+  ListNode *fast = head;
 
   while (fast && fast->next) {
     slow = slow->next;

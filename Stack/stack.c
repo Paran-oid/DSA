@@ -4,44 +4,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// stack_t Datastructure was implemented through an array method
-
-stack_t *stack_create(enum datatype type) {
-
-  stack_t *res = malloc(sizeof(stack_t));
-  res->tsize = type_map(type);
-  res->tail = NULL;
+Stack *stack_create(DataType type) {
+  Stack *res = malloc(sizeof(Stack));
+  if (!res) {
+    perror("Error allocating memory for stack");
+    exit(EXIT_FAILURE);
+  }
+  res->element_size = type_map(type);
   res->head = NULL;
+  res->tail = NULL;
   res->type = type;
 
   return res;
 }
 
-void stack_destroy(stack_t *stack) {
+void stack_destroy(Stack *stack) {
+  if (!stack)
+    return;
 
-  listnode_t *curr = stack->head;
+  ListNode *curr = stack->head;
   while (curr) {
-    listnode_t *temp = curr;
+    ListNode *temp = curr;
     curr = curr->next;
+    free(temp->value);
     free(temp);
   }
   free(stack);
 }
 
-void push(stack_t *stack, void *el) {
-
-  listnode_t *newHead = node_create(el, stack->head, stack->tsize);
+void push(Stack *stack, void *el) {
+  ListNode *newHead = node_create(el, stack->head, stack->element_size);
   stack->head = newHead;
 }
 
-void *pop(stack_t *stack) {
-  void *res = stack->head->val;
+void *pop(Stack *stack) {
+  if (stack->head == NULL) {
+    return NULL;
+  }
 
-  listnode_t *temp = stack->head;
+  void *res = stack->head->value;
+  ListNode *temp = stack->head;
   stack->head = stack->head->next;
+  free(temp->value);
   free(temp);
 
   return res;
 }
 
-void *speek(const stack_t *stack) { return stack->head->val; }
+void *speek(const Stack *stack) {
+  if (stack->head == NULL) {
+    return NULL;
+  }
+
+  return stack->head->value;
+}

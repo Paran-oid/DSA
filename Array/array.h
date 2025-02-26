@@ -1,38 +1,32 @@
 #pragma once
 
-#include "funcs.h"
+#include "models.h"
 
 #include <stdbool.h>
 
-typedef struct array {
-  void *data;
-  usize tsize, size, capacity;
-  enum datatype type;
-} array_t;
-
 // Basic Functionality
 
-array_t array_create(void *arr, usize n, enum datatype type);
-void array_destroy(array_t *arr);
+Array array_create(void *arr, size_t n, DataType type);
+void array_destroy(Array *arr);
 
 // Dynamic Functionality
-void *array_get(const array_t *arr, i32 index);
-void array_set(array_t *arr, i32 index, void *item);
-void array_pushback(array_t *arr, void *item);
-void *array_popback(array_t *arr);
-void array_resize(array_t *arr);
+void *array_get(const Array *arr, int index);
+void array_set(Array *arr, int index, void *item);
+void array_pushback(Array *arr, void *item);
+void *array_popback(Array *arr);
+void array_resize(Array *arr);
 
 // Search Algorithms
 
-bool binary_search(array_t *arr, void *item);
-bool linear_search(array_t *arr, void *item);
+bool binary_search(Array *arr, void *item);
+bool linear_search(Array *arr, void *item);
 
 // Sorting Algorithms
 
-void selection_sort(array_t *arr, bool ascending);
-void bubble_sort(array_t *arr, bool ascending);
-void insertion_sort(array_t *arr, bool ascending);
-void cycle_sort(array_t *arr, bool ascending);
+void selection_sort(Array *arr, bool ascending);
+void bubble_sort(Array *arr, bool ascending);
+void insertion_sort(Array *arr, bool ascending);
+void cycle_sort(Array *arr, bool ascending);
 
-void quick_sort(array_t *arr, isize low, isize high, bool isAscending);
-void merge_sort(array_t *arr, isize l, isize r, bool isAscending);
+void quick_sort(Array *arr, int low, int high, bool isAscending);
+void merge_sort(Array *arr, int l, int r, bool isAscending);
