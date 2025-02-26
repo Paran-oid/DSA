@@ -41,7 +41,7 @@ void enqueue(Queue *q, void *n) {
 
 void *dequeue(Queue *q) {
   ASSERT(q->front != NULL, "Invalid queue\n");
-  void *res = q->front->value;
+  void *res = q->front->val;
 
   ListNode *temp = q->front;
 
@@ -58,5 +58,5 @@ void *dequeue(Queue *q) {
 
 const void *qpeek(const Queue *queue) {
   ASSERT(queue->front != NULL, "Queue must have items...\n");
-  return queue->front->value;
+  return queue->front->val;
 }

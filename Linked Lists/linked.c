@@ -13,14 +13,14 @@ ListNode *node_create(void *val, ListNode *next, size_t element_size) {
     exit(EXIT_FAILURE);
   }
 
-  head->value = malloc(element_size);
-  if (!head->value) {
-    perror("Failed to allocate memory for linked list value...\n");
+  head->val = malloc(element_size);
+  if (!head->val) {
+    perror("Failed to allocate memory for linked list val...\n");
     free(head);
     exit(EXIT_FAILURE);
   }
 
-  memcpy(head->value, val, element_size);
+  memcpy(head->val, val, element_size);
   head->next = next;
   head->element_size = element_size;
 
@@ -145,7 +145,7 @@ ListNode *merge_two_lists(ListNode *head1, ListNode *head2,
   ListNode *ptr = dummy;
 
   while (head1 && head2) {
-    if (head1->value < head2->value) {
+    if (head1->val < head2->val) {
       ptr->next = head1;
       head1 = head1->next;
       ptr = ptr->next;

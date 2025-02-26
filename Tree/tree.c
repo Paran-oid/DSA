@@ -17,15 +17,15 @@ TreeNode *treenode_create(void *val, TreeNode *left, TreeNode *right,
 
   mynode->left = left;
   mynode->right = right;
-  mynode->value = malloc(element_size);
+  mynode->val = malloc(element_size);
 
-  if (!mynode->value) {
+  if (!mynode->val) {
     perror("There was an error allocating memory for treenode val\n");
     free(mynode);
     exit(EXIT_FAILURE);
   }
 
-  memcpy(mynode->value, val, element_size);
+  memcpy(mynode->val, val, element_size);
 
   return mynode;
 }
@@ -45,7 +45,7 @@ void treenode_destroy(TreeNode *node) {
 
   treenode_destroy(node->left);
   treenode_destroy(node->right);
-  free(node->value); // Don't forget to free the value memory
+  free(node->val); // Don't forget to free the val memory
   free(node);
 }
 
@@ -61,8 +61,8 @@ TreeNode *tree_parent(TreeNode *root, void *val, size_t element_size) {
   if (!root)
     return NULL;
 
-  if ((root->left && memcmp(root->left->value, val, element_size) == 0) ||
-      (root->right && memcmp(root->right->value, val, element_size) == 0)) {
+  if ((root->left && memcmp(root->left->val, val, element_size) == 0) ||
+      (root->right && memcmp(root->right->val, val, element_size) == 0)) {
     return root;
   }
 
@@ -88,7 +88,7 @@ void tree_insert(Tree *tree, void *val) {
   enqueue(q, &(tree->root));
   while (q->front) {
     TreeNode *current = *(TreeNode **)dequeue(q);
-    if (memcmp(current->value, node->value, tree->element_size) == 0) {
+    if (memcmp(current->val, node->val, tree->element_size) == 0) {
       break;
     }
 
@@ -114,7 +114,7 @@ static void tree_helper_delete(TreeNode *root, TreeNode **lastptr,
   if (!root)
     return;
 
-  if (memcmp(root->value, val, element_size) == 0)
+  if (memcmp(root->val, val, element_size) == 0)
     *itemptr = root;
 
   tree_helper_delete(root->left, lastptr, itemptr, val, element_size);
@@ -128,16 +128,16 @@ void tree_delete(Tree *tree, void *val) {
   tree_helper_delete(tree->root, &lastptr, &itemptr, val, tree->element_size);
 
   if (itemptr && lastptr)
-    memcpy(itemptr->value, lastptr->value, tree->element_size);
+    memcpy(itemptr->val, lastptr->val, tree->element_size);
 
-  parentptr = tree_parent(tree->root, lastptr->value, tree->element_size);
+  parentptr = tree_parent(tree->root, lastptr->val, tree->element_size);
 
   if (parentptr->right == lastptr)
     parentptr->right = NULL;
   else
     parentptr->left = NULL;
 
-  free(lastptr->value);
+  free(lastptr->val);
   free(lastptr);
 }
 
@@ -149,7 +149,7 @@ TreeNode *search_tree_node(TreeNode *node, void *val, size_t element_size) {
   if (left_node)
     return left_node;
 
-  if (memcmp(node->value, val, element_size) == 0) {
+  if (memcmp(node->val, val, element_size) == 0) {
     return node;
   }
 

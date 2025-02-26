@@ -71,7 +71,7 @@ typedef struct {
 
 // SINGLE LINKED LIST (CIRCULAR & NORMAL)
 typedef struct ListNode {
-  void *value;
+  void *val;
   struct ListNode *next;
   size_t element_size;
 } ListNode;
@@ -84,7 +84,7 @@ typedef struct {
 
 // DOUBLY LINKED LIST
 typedef struct DListNode {
-  void *value;
+  void *val;
   struct DListNode *next;
   struct DListNode *prev;
 } DListNode;
@@ -101,7 +101,7 @@ typedef struct {
 // ####################################################################################################################################
 
 typedef struct TreeNode {
-  void *value;
+  void *val;
   struct TreeNode *right;
   struct TreeNode *left;
 } TreeNode;
@@ -160,5 +160,27 @@ typedef struct {
   size_t element_size;
   DataType type;
 } Matrix;
+
+// ####################################################################################################################################
+/*
+  Hash Table Section
+*/
+// ####################################################################################################################################
+
+typedef struct HashNode {
+  void *key;
+  void *val;
+  struct HashNode *next;
+} HashNode;
+
+typedef struct {
+  HashNode **buckets;
+  DataType type1;
+  DataType type2;
+  size_t element_size1;
+  size_t element_size2;
+  size_t capacity;
+  size_t size;
+} HashTable;
 
 // ####################################################################################################################################

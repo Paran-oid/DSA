@@ -26,7 +26,7 @@ void stack_destroy(Stack *stack) {
   while (curr) {
     ListNode *temp = curr;
     curr = curr->next;
-    free(temp->value);
+    free(temp->val);
     free(temp);
   }
   free(stack);
@@ -42,10 +42,10 @@ void *pop(Stack *stack) {
     return NULL;
   }
 
-  void *res = stack->head->value;
+  void *res = stack->head->val;
   ListNode *temp = stack->head;
   stack->head = stack->head->next;
-  free(temp->value);
+  free(temp->val);
   free(temp);
 
   return res;
@@ -56,5 +56,5 @@ void *speek(const Stack *stack) {
     return NULL;
   }
 
-  return stack->head->value;
+  return stack->head->val;
 }
