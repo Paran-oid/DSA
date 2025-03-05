@@ -1,27 +1,21 @@
-#include "hash.h"
-#include "logs.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include "core.h"
+#include "list.h"
 
 int main(void) {
 
-  logger_create(LOG_DATE_ALL);
+  int x = 3;
+  int y = 4;
 
-  HashTable ht = hash_table_create(DATATYPE_STRING, DATATYPE_INT);
+  List *mylist;
+  list_create(mylist, data_destroy);
+  list_ins_next(mylist, NULL, &x);
+  list_ins_next(mylist, NULL, &y);
 
-  // make it display the hash_table
-  int x = 30;
+  printf("value of list at 0 and 1 are [%d %d]", *(int *)mylist->head->data,
+         *(int *)mylist->head->next->data);
 
-  hash_table_insert(&ht, "aziz", &x);
-  hash_table_insert(&ht, "damn", &x);
-  void *res = hash_table_lookup(&ht, "aziz");
-  printf("address of res is %p\n", res);
+  printf("hello world\n");
 
-  logger_destroy();
-  exit(EXIT_SUCCESS);
+  list_destroy(mylist);
+  return 0;
 }
-
-// TODO: CREATE TESTS
