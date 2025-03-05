@@ -1,28 +1,30 @@
 #include "list.h"
 #include "core.h"
 
+#include <stdlib.h>
 #include <string.h>
 
-void list_create(List *list, void (*destroy)(void *data)) {
-  list = malloc(sizeof(List));
-  list->destroy = destroy;
-
-  if (!destroy) {
-    list->destroy = data_destroy;
+void list_create(List *list, int (*match)(const void *key1, const void *key2),
+                 void (*destroy)(void *)) {
+  if ((list = malloc(sizeof(List))) == NULL) {
+    return;
   }
+
+  match != NULL ? list->match = match : NULL;
+  destroy != NULL ? list->destroy = destroy : NULL;
 
   list->head = list->tail = NULL;
   list->size = 0;
   return list;
 }
 void list_destroy(List *list) {
+  ASSERT(list->destroy != NULL, "invalid destroy function passed to list\n");
 
   void *data;
 
   while (list_size(list) > 0) {
-    if (list_rem_next(list, NULL, (void **)&data) == 0 &&
-        list->destroy != NULL) {
-      list->destroy(data);
+    if (list_rem_next(list, NULL, (void **)&data) == 0) {
+      ;
     }
   }
 
@@ -33,7 +35,7 @@ void list_destroy(List *list) {
 
 int list_ins_next(List *list, ListNode *elem, const void *data) {
   ListNode *new_node;
-  if ((new_node = malloc(sizeof(ListNode))) < 0) {
+  if ((new_node = malloc(sizeof(ListNode))) == NULL) {
     return -1;
   }
 
@@ -80,7 +82,7 @@ int list_rem_next(List *list, ListNode *elem, void **data) {
     }
   }
 
-  free(old_elem);
+  list->destroy(old_elem);
   list->size--;
   return 0;
 }

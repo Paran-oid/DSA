@@ -4,6 +4,7 @@ project(DSA VERSION 0.1.0 LANGUAGES C)
 set(SRC 
   Core/core.c
   List/list.c
+  List/dlist.c
   main.c)
 
 set(INCLUDE_DIR
