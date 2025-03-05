@@ -29,7 +29,7 @@ void dlist_destroy(DList *dlist);
 int dlist_ins_next(DList *dlist, DListNode *elem, const void *data);
 int dlist_ins_prev(DList *dlist, DListNode *elem, const void *data);
 
-int dlist_rem_next(DList *dlist, DListNode *elem, void **data);
+int dlist_rem(DList *dlist, DListNode *elem, void **data);
 
 #define dlist_size(dlist) ((dlist)->size)
 #define dlist_head(dlist) ((dlist)->head)
