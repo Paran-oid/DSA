@@ -13,10 +13,10 @@ int set_rem(Set* set, void** data);
 
 int set_union(Set* seti, const Set* set1, const Set* set2);
 int set_intersection(Set* seti, const Set* set1, const Set* set2);
-int set_difference(Set* seti, const Set* set1, const Set* set2);
-int set_is_member(Set* set_dest, Set* set_src);
-int set_is_subset(Set* set_dest, Set* set_src);
-int set_is_equal(Set* set1, Set* set2);
+int set_difference(Set* seti, const Set* set_comp_from, const Set* set_comp_to);
+int set_is_member(const Set* set_dest, const void* item);
+int set_is_subset(const Set* set_comp_from, const Set* set_comp_to);
+int set_is_equal(const Set* set1, const Set* set2);
 
 #define set_size(set) ((set)->size)
 
