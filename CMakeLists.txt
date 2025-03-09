@@ -8,6 +8,7 @@ set(SRC
   list/clist.c
   linear/queue.c
   linear/stack.c
+  linear/set.c
   main.c)
 
 set(INCLUDE_DIR
