@@ -5,6 +5,7 @@ set(SRC
   Core/core.c
   List/list.c
   List/dlist.c
+  List/clist.c
   main.c)
 
 set(INCLUDE_DIR

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://cdn.statically.io/gh/nguyenngoclongdev/cdn/main/schema/v10/terminal-keeper.json",
+  "theme": "tribe",
+  "active": "default",
+  "activateOnStartup": true,
+  "keepExistingTerminals": false,
+  "sessions": {
+    "default": [
+      {
+        "name": "code",
+        "autoExecuteCommands": true,
+        "icon": "code",
+        "color": "terminal.ansiRed",
+        "commands": ["cd build"]
+      },
+      {
+        "name": "GDB",
+        "autoExecuteCommands": true,
+        "icon": "debug",
+        "color": "terminal.ansiGreen",
+        "commands": ["gdb"]
+      },
+      {
+        "name": "htop",
+        "autoExecuteCommands": true,
+        "icon": "terminal",
+        "color": "terminal.ansiYellow",
+        "commands": ["htop"]
+      },
+      {
+        "name": "docker",
+        "commands": ["docker --version"],
+        "icon": "cloud",
+        "color": "terminal.ansiBlue",
+        "autoExecuteCommands": true
+      }
+    ]
+  }
+}
