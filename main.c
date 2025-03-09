@@ -1,61 +1,54 @@
-#include "clist.h"
+#include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-void destroy_data(void* data)
+void print_queue(Queue* queue)
 {
-    free(data);
-}
-
-int match_data(const void* key1, const void* key2)
-{
-    return (*(int*)key1 == *(int*)key2);
-}
-
-void print_list(CList* clist)
-{
-    CListNode* node = clist_head(clist);
-    if (!node) {
-        printf("List is empty.\n");
-        return;
+    ListNode* node = queue->head;
+    printf("Queue (front -> rear): ");
+    while (node) {
+        printf("%d -> ", *(int*)node->data);
+        node = node->next;
     }
-
-    for (size_t i = 0; i < clist_size(clist); i++) {
-        printf("%d -> ", *(int*)clist_data(node));
-        node = clist_next(node);
-    }
-    printf("(head)\n");
+    printf("NULL\n");
 }
 
 int main()
 {
-    CList list;
-    clist_create(&list, match_data, destroy_data);
+    Queue queue;
+    queue_create(&queue, NULL, free); // Use free to destroy data when dequeuing
 
-    int* value;
-    CListNode* curr = list.head;
+    // Enqueue values
     for (int i = 1; i <= 5; i++) {
-        value = malloc(sizeof(int));
+        int* value = malloc(sizeof(int));
         *value = i;
-        clist_ins_next(&list, (i == 1) ? NULL : curr, value);
-        if (i == 1) {
-            curr = list.head;
-        }
-        if (i != 1) {
-            curr = curr->next;
-        }
+        queue_enqueue(&queue, value);
     }
 
-    printf("Initial list:\n");
-    print_list(&list); // Expected output: 1 -> 2 -> 3 -> 4 -> 5 -> (head)
+    printf("After enqueueing 5 values:\n");
+    print_queue(&queue);
 
-    void* removed_data;
-    clist_rem_next(&list, list.head, &removed_data);
-    printf("After removing one element:\n");
-    print_list(&list); // Expected output: 1 -> 3 -> 4 -> 5 -> (head)
-    free(removed_data);
+    // Peek at the front value
+    int* front_value = (int*)queue_peek(&queue);
+    if (front_value) {
+        printf("Front of queue: %d\n", *front_value);
+    }
 
-    clist_destroy(&list);
-    printf("List destroyed.\n"); // Expected output: List destroyed.
+    // Dequeue values one by one
+    for (int i = 0; i < 3; i++) {
+        int* dequeued_value;
+        if (queue_dequeue(&queue, (void**)&dequeued_value) == 0) {
+            printf("Dequeued: %d\n", *dequeued_value);
+            free(dequeued_value);
+        } else {
+            printf("Queue is empty!\n");
+        }
+        print_queue(&queue);
+    }
+
+    // Destroy queue
+    queue_destroy(&queue);
+    printf("Queue destroyed.\n");
+
     return 0;
 }

@@ -4,6 +4,10 @@
     "*.ndjson": "jsonl",
     "*.dbclient-js": "javascript",
     "*.embeddedhtml": "html",
-    "core.h": "c"
+    "core.h": "c",
+    "stack.h": "c",
+    "array": "c",
+    "string": "c",
+    "string_view": "c"
   }
 }

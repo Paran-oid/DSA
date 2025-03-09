@@ -6,10 +6,13 @@ set(SRC
   list/list.c
   list/dlist.c
   list/clist.c
+  linear/queue.c
+  linear/stack.c
   main.c)
 
 set(INCLUDE_DIR
-  Core
+  core
+  linear
   list)
 
 add_executable(DSA ${SRC})

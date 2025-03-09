@@ -4,26 +4,26 @@
 #include <stddef.h>
 
 typedef struct ListNode_ {
-  void *data;
-  struct ListNode_ *next;
+    void* data;
+    struct ListNode_* next;
 } ListNode;
 
 typedef struct {
-  ListNode *head;
-  ListNode *tail;
+    ListNode* head;
+    ListNode* tail;
 
-  int (*match)(const void *key1, const void *key2);
-  void (*destroy)(void *data);
+    int (*match)(const void* key1, const void* key2);
+    void (*destroy)(void* data);
 
-  size_t size;
+    size_t size;
 } List;
 
-void list_create(List *list, int (*match)(const void *key1, const void *key2),
-                 void (*destroy)(void *));
-void list_destroy(List *list);
+void list_create(List* list, int (*match)(const void* key1, const void* key2),
+    void (*destroy)(void*));
+void list_destroy(List* list);
 
-int list_ins_next(List *list, ListNode *elem, const void *data);
-int list_rem_next(List *list, ListNode *elem, void **data);
+int list_ins_next(List* list, ListNode* elem, const void* data);
+int list_rem_next(List* list, ListNode* elem, void** data);
 
 #define list_size(list) ((list)->size)
 #define list_head(list) ((list)->head)
