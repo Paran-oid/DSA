@@ -9,12 +9,14 @@ set(SRC
   linear/queue.c
   linear/stack.c
   linear/set.c
+  hash/hashtable.c
   main.c)
 
 set(INCLUDE_DIR
   core
   linear
-  list)
+  list
+  hash)
 
 add_executable(DSA ${SRC})
 
