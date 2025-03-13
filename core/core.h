@@ -4,6 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct Pair_ {
+    void* key;
+    void* value;
+
+    size_t key_size;
+    size_t value_size;
+} Pair;
+
 #define ASSERT(_e, ...)                   \
     do {                                  \
         if (!(_e)) {                      \

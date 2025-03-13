@@ -13,7 +13,6 @@ void list_create(List* list, int (*match)(const void* key1, const void* key2),
 
     list->head = list->tail = NULL;
     list->size = 0;
-    return list;
 }
 void list_destroy(List* list)
 {
@@ -27,7 +26,7 @@ void list_destroy(List* list)
         }
     }
 
-    memset(list, 0, sizeof(list));
+    memset(list, 0, sizeof(List));
 
     return;
 }
