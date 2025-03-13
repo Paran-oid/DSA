@@ -20,10 +20,10 @@ typedef struct HashTable_ {
 void ht_init(HashTable* ht, int (*hash)(const void* key), int (*match)(const void* key1, const void* key2), void (*destroy)(void* key));
 void ht_destroy(HashTable* ht);
 
-int ht_insert(HashTable* ht, void* key, void* val);
-int ht_get();
-int ht_remove();
+int ht_insert(HashTable* ht, void* data);
+int ht_remove(HashTable* ht, void** data);
+int ht_get(HashTable* ht, void** data);
 
-#define ht_size(ht)((ht)->size)
+#define ht_size(ht) ((ht)->size)
 
 #endif
