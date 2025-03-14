@@ -33,17 +33,17 @@ void ht_destroy(HashTable* ht)
 int ht_insert(HashTable* ht, const void* data)
 {
     void* temp;
-    int res_val;
 
     temp = (void*)data;
     if (ht_get(ht, &temp) == 0) {
         return 1;
     }
     int bucket = ht->hash(data) % ht->buckets;
-    if ((res_val = list_ins_next(&ht->table[bucket], NULL, data)) == 0) {
+    if ((list_ins_next(&ht->table[bucket], NULL, data)) == 0) {
         ht->size++;
+        return 0;
     }
-    return res_val;
+    return 0;
 }
 
 int ht_remove(HashTable* ht, void** data)
