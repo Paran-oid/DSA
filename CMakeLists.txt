@@ -11,6 +11,7 @@ set(SRC
   linear/set.c
   hash/hashtable.c
   tree/btree.c
+  tree/bistree.c
   main.c)
 
 set(INCLUDE_DIR
