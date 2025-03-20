@@ -12,6 +12,8 @@ set(SRC
   hash/hashtable.c
   tree/btree.c
   tree/bistree.c
+  tree/heap.c
+  tree/pqueue.c
   main.c)
 
 set(INCLUDE_DIR
