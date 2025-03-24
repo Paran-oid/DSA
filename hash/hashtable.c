@@ -1,5 +1,6 @@
 #include "hashtable.h"
 #include "list.h"
+#include "pair.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -92,7 +93,7 @@ int ht_get(const HashTable* ht, void** data)
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 
-int ht_get_value(const HashTable* ht, const void* key, void** value)
+int ht_get_value(const HashTable* ht, const void* key, void** val)
 {
     ListNode* curr;
     int bucket = ht->hash(key) % ht->buckets;
@@ -100,7 +101,7 @@ int ht_get_value(const HashTable* ht, const void* key, void** value)
     for (curr = list_head(&ht->table[bucket]); curr != NULL; curr = list_next(curr)) {
         void* found_key = ((Pair*)(curr->data))->key;
         if (ht->match(key, found_key)) {
-            *value = ((Pair*)(curr->data))->value;
+            *val = ((Pair*)(curr->data))->val;
             return 0;
         }
     }
@@ -119,7 +120,7 @@ int ht_set(HashTable* ht, const Pair* pair)
         for (ListNode* curr = list_head(&ht->table[bucket]); curr != NULL; curr = list_next(curr)) {
             void* found_key = ((Pair*)(curr->data))->key;
             if (ht->match(pair->key, found_key)) {
-                ((Pair*)curr->data)->value = pair->value;
+                ((Pair*)curr->data)->val = pair->val;
                 return 0;
             }
         }
@@ -129,13 +130,13 @@ int ht_set(HashTable* ht, const Pair* pair)
     data->key = malloc(pair->key_size);
     memcpy(data->key, pair->key, pair->key_size);
 
-    data->value = malloc(pair->value_size);
-    memcpy(data->value, pair->value, pair->value_size);
+    data->val = malloc(pair->val_size);
+    memcpy(data->val, pair->val, pair->val_size);
 
     if ((res_val = list_ins_next(&ht->table[bucket], NULL, data)) == 0) {
         ht->size++;
     } else {
-        free(data->value);
+        free(data->val);
         free(data->key);
         free(data);
     }
