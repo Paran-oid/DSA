@@ -24,6 +24,8 @@ set(SRC
   tree/bistree.c
   tree/heap.c
   tree/pqueue.c
+  graph/graph.c
+  graph/graph_traversal.c
   main.c)
 
 set(INCLUDE_DIR
@@ -31,7 +33,8 @@ set(INCLUDE_DIR
   linear
   list
   hash
-  tree)
+  tree
+  graph)
 
 add_executable(DSA ${SRC})
 
