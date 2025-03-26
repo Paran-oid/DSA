@@ -49,6 +49,7 @@ int graph_ins_vertex(Graph* g, const void* data)
     }
 
     g->vcount++;
+    return 0;
 }
 int graph_ins_edge(Graph* g, const void* data1, const void* data2)
 {
@@ -86,7 +87,7 @@ int graph_ins_edge(Graph* g, const void* data1, const void* data2)
 }
 int graph_rem_vertex(Graph* g, void** data)
 {
-    ListNode *curr, *prev, *node_to_be_removed;
+    ListNode *curr, *prev;
     AdjList* curr_list;
     int found = 0, retval;
     for (curr = list_head(&g->adjlists); curr != NULL; curr = list_next(curr)) {
@@ -96,7 +97,6 @@ int graph_rem_vertex(Graph* g, void** data)
         }
 
         if (g->match(*data, curr_list->vertex)) {
-            node_to_be_removed = curr;
             found = 1;
         }
 

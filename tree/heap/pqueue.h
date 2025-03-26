@@ -7,6 +7,9 @@ typedef Heap PQueue;
 
 #define pqueue_create heap_create
 #define pqueue_destroy heap_destroy
+
+
+
 #define pqueue_insert heap_insert
 #define pqueue_extract heap_extract
 

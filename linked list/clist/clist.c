@@ -14,7 +14,7 @@ void clist_create(CList* clist,
     clist->size = 0;
 }
 
-int clist_destroy(CList* clist)
+void clist_destroy(CList* clist)
 {
     CListNode *node = clist->head, *temp;
     clist->head->next = NULL;

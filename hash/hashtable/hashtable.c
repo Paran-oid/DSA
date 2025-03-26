@@ -12,7 +12,7 @@ void ht_create(HashTable* ht, int buckets, int (*hash)(const void* key), int (*m
     }
     ht->buckets = buckets;
 
-    for (size_t i = 0; i < buckets; i++) {
+    for (size_t i = 0; i < (size_t)buckets; i++) {
         list_create(&ht->table[i], match, destroy);
     }
 
@@ -24,7 +24,7 @@ void ht_create(HashTable* ht, int buckets, int (*hash)(const void* key), int (*m
 }
 void ht_destroy(HashTable* ht)
 {
-    for (size_t i = 0; i < ht->buckets; i++) {
+    for (size_t i = 0; i < (size_t)ht->buckets; i++) {
         list_destroy(&ht->table[i]);
     }
     free(ht->table);
@@ -50,11 +50,9 @@ int ht_insert(HashTable* ht, const void* data)
 int ht_remove(HashTable* ht, void** data)
 {
     int bucket;
-    ListNode *curr, *prev;
+    ListNode* curr;
 
     bucket = ht->hash(*data) % ht->buckets;
-
-    prev = NULL;
 
     for (curr = list_head(&ht->table[bucket]); curr != NULL; curr = list_next(curr)) {
         if (ht->match(list_data(curr), *data)) {
@@ -64,8 +62,6 @@ int ht_remove(HashTable* ht, void** data)
             } else {
                 return 1;
             }
-        } else {
-            prev = curr;
         }
     }
 
@@ -146,11 +142,9 @@ int ht_set(HashTable* ht, const Pair* pair)
 int ht_remove_key(HashTable* ht, const void* key, void** data)
 {
     int bucket;
-    ListNode *curr, *prev;
+    ListNode* curr;
 
     bucket = ht->hash(key) % ht->buckets;
-
-    prev = NULL;
 
     for (curr = list_head(&ht->table[bucket]); curr != NULL; curr = list_next(curr)) {
         void* found_key = ((Pair*)(curr->data))->key;
@@ -161,8 +155,6 @@ int ht_remove_key(HashTable* ht, const void* key, void** data)
             } else {
                 return 1;
             }
-        } else {
-            prev = curr;
         }
     }
 

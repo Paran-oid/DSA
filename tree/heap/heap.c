@@ -93,13 +93,13 @@ int heap_extract(Heap* heap, void** data)
     while (true) {
         lpos = heap_left(ipos);
         rpos = heap_right(ipos);
-        if (lpos < heap_size(heap) && heap->match(heap->tree[lpos], heap->tree[ipos]) > 0) {
+        if (lpos < (int)heap_size(heap) && heap->match(heap->tree[lpos], heap->tree[ipos]) > 0) {
             mpos = lpos;
         } else {
             mpos = ipos;
         }
 
-        if (rpos < heap_size(heap) && heap->match(heap->tree[rpos], heap->tree[mpos]) > 0) {
+        if (rpos < (int)heap_size(heap) && heap->match(heap->tree[rpos], heap->tree[mpos]) > 0) {
             mpos = rpos;
         }
 

@@ -3,14 +3,12 @@
 #include "list.h"
 #include "queue.h"
 
-// FIXME
-
 int bfs(Graph* graph, BfsVertex* start, List* hops)
 {
     ListNode *curr, *member;
 
     BfsVertex *clr_vertex, *adj_vertex;
-    AdjList* clr_adjst;
+    AdjList *clr_adjst, *adj_list;
 
     for (curr = list_head(&graph->adjlists); curr != NULL; curr = list_next(curr)) {
         clr_vertex = (BfsVertex*)((AdjList*)list_data(curr))->vertex;
@@ -34,11 +32,10 @@ int bfs(Graph* graph, BfsVertex* start, List* hops)
         queue_destroy(&q);
         return -1;
     }
-    // FIXME
     while (queue_size(&q) > 0) {
-        AdjList* adj_list = queue_peek(&q);
+        adj_list = queue_peek(&q);
         for (member = list_head(&adj_list->adjacent); member != NULL; member = list_next(member)) {
-            adj_vertex = (BfsVertex*)list_data(member);
+            adj_vertex = list_data(member);
             if (graph_adjlist(graph, adj_vertex, &clr_adjst) != 0) {
                 queue_destroy(&q);
                 return -1;
@@ -47,13 +44,19 @@ int bfs(Graph* graph, BfsVertex* start, List* hops)
 
             if (clr_vertex->color == VERTEX_WHITE) {
                 clr_vertex->color = VERTEX_GRAY;
-                clr_vertex->hops = ((BfsVertex*)adj_vertex)->hops + 1;
+                clr_vertex->hops = ((BfsVertex*)adj_list->vertex)->hops + 1;
 
                 if (queue_enqueue(&q, clr_adjst) != 0) {
                     queue_destroy(&q);
                     return -1;
                 }
             }
+        }
+        if (queue_dequeue(&q, (void**)&adj_list) == 0) {
+            ((BfsVertex*)(adj_list->vertex))->color = VERTEX_BLACK;
+        } else {
+            queue_destroy(&q);
+            return -1;
         }
     }
     queue_destroy(&q);
@@ -68,6 +71,7 @@ int bfs(Graph* graph, BfsVertex* start, List* hops)
             }
         }
     }
+    list_tail(hops)->next = NULL;
     return 0;
 }
 
@@ -99,8 +103,8 @@ static int dfs_main(Graph* graph, AdjList* list, List* ordered)
             return -1;
         }
 
-        return 0;
     }
+    return 0;
 }
 
 int dfs(Graph* graph, List* ordered)
