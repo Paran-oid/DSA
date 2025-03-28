@@ -1,5 +1,6 @@
 #include "sorting.h"
 #include "core.h"
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -94,7 +95,7 @@ static int merge(void* arr, size_t esize, int start, int mid, int end, int (*com
     }
 
     while (l < (int)n1) {
-        memcpy((char*)arr + k * esize, (char*)  arr1 + l * esize, esize);
+        memcpy((char*)arr + k * esize, (char*)arr1 + l * esize, esize);
         l++;
         k++;
     }
@@ -121,4 +122,100 @@ int merge_sort(void* arr, size_t size, size_t esize, int start, int end, int (*c
         merge(arr, esize, start, mid, end, comp);
     }
     return 0;
+}
+
+int counting_sort(int* arr, size_t size, size_t k)
+{
+    int* arr_count;
+    int* arr_temp;
+
+    if ((arr_count = malloc(sizeof(int) * k)) == NULL) {
+        return -1;
+    }
+
+    if ((arr_temp = malloc(sizeof(int) * size)) == NULL) {
+        free(arr_count);
+        return -1;
+    }
+
+    for (size_t i = 0; i < k; i++) {
+        arr_count[i] = 0;
+    }
+
+    for (size_t i = 0; i < size; i++) {
+        arr_count[arr[i]]++;
+    }
+
+    for (size_t i = 1; i < k; i++) {
+        arr_count[i] += arr_count[i - 1];
+    }
+
+    for (int j = size - 1; j >= 0; j--) {
+        arr_temp[arr_count[arr[j]] - 1] = arr[j];
+        arr_count[arr[j]] = arr_count[arr[j]] - 1;
+    }
+
+    memcpy(arr, arr_temp, size * sizeof(int));
+    free(arr_temp);
+    free(arr_count);
+    return 0;
+}
+
+int radix_sort(int* arr, size_t size, int p, int k)
+{
+    int* temp;
+    int* counts;
+
+    if ((counts = malloc(sizeof(int) * k)) == NULL) {
+        return -1;
+    }
+
+    if ((temp = malloc(sizeof(int) * size)) == NULL) {
+        return -1;
+    }
+
+    for (int n = 0; n < p; n++) {
+        for (int i = 0; i < k; i++) {
+            counts[i] = 0;
+        }
+
+        int pval = (int)pow((double)k, (double)n);
+
+        for (int j = 0; j < (int)size; j++) {
+            int index = (int)(arr[j] / pval) % k;
+            counts[index]++;
+        }
+        for (int i = 1; i < k; i++) {
+            counts[i] = counts[i] + counts[i - 1];
+        }
+
+        for (int j = size - 1; j >= 0; j--) {
+            int index = (int)(arr[j] / pval) % k;
+            temp[counts[index] - 1] = arr[j];
+            counts[index]--;
+        }
+
+        memcpy(arr, temp, size * sizeof(int));
+    }
+
+    free(counts);
+    free(temp);
+    return 0;
+}
+
+int bisearch(void* sorted, void* target, int size, int esize, int (*compare)(const void* key1, const void* key2))
+{
+    int l = 0, r = size - 1;
+    char* arr = (char*)sorted;
+    while (l <= r) {
+        int middle = l + (r - l) / 2;
+        if (compare(target, &arr[middle * esize]) == 0) {
+            return middle;
+        } else if (compare(target, &arr[middle * esize]) < 0) {
+            r--;
+        } else {
+            l++;
+        }
+    }
+    return -1;
 }
