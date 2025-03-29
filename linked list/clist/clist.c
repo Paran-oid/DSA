@@ -16,12 +16,11 @@ void clist_create(CList* clist,
 
 void clist_destroy(CList* clist)
 {
-    CListNode *node = clist->head, *temp;
-    clist->head->next = NULL;
-    while (node) {
-        temp = node->next;
-        clist->destroy(node);
-        node = temp;
+    void* data;
+    while (clist->size > 0) {
+        if (clist_rem_next(clist, NULL, (void**)&data) == 0 && clist->destroy) {
+            clist->destroy(data);
+        }
     }
     clist->head = NULL;
     memset(clist, 0, sizeof(CList));

@@ -27,7 +27,7 @@ void heap_destroy(Heap* heap)
             heap->destroy(heap->tree[i]);
         }
     }
-    heap->destroy(heap->tree);
+    free(heap->tree);
     memset(heap, 0, sizeof(Heap));
 }
 int heap_insert(Heap* heap, const void* data)

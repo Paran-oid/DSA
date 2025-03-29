@@ -5,7 +5,6 @@
 
 typedef struct BfsVertex_ {
     VertexColor color;
-    int hops;
     void* data;
 } BfsVertex;
 
@@ -14,7 +13,7 @@ typedef struct DfsVertex_ {
     VertexColor color;
 } DfsVertex;
 
-int bfs(Graph* graph, BfsVertex* start, List* hops);
+int bfs(Graph* graph, BfsVertex* start, List* list_res);
 int dfs(Graph* graph, List* ordered);
 
 #endif

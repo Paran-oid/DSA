@@ -3,7 +3,7 @@
 #include "list.h"
 #include "queue.h"
 
-int bfs(Graph* graph, BfsVertex* start, List* hops)
+int bfs(Graph* graph, BfsVertex* start, List* list_res)
 {
     ListNode *curr, *member;
 
@@ -14,15 +14,13 @@ int bfs(Graph* graph, BfsVertex* start, List* hops)
         clr_vertex = (BfsVertex*)((AdjList*)list_data(curr))->vertex;
         if (graph->match(clr_vertex, start) == 0) {
             clr_vertex->color = VERTEX_GRAY;
-            clr_vertex->hops = 0;
         } else {
             clr_vertex->color = VERTEX_WHITE;
-            clr_vertex->hops = -1;
         }
     }
 
     Queue q;
-    queue_create(&q, graph->match, graph->destroy);
+    queue_create(&q, graph->match, NULL);
     if (graph_adjlist(graph, start, &clr_adjst) != 0) {
         queue_destroy(&q);
         return -1;
@@ -32,6 +30,8 @@ int bfs(Graph* graph, BfsVertex* start, List* hops)
         queue_destroy(&q);
         return -1;
     }
+
+    list_create(list_res, graph->match, NULL);
     while (queue_size(&q) > 0) {
         adj_list = queue_peek(&q);
         for (member = list_head(&adj_list->adjacent); member != NULL; member = list_next(member)) {
@@ -44,7 +44,6 @@ int bfs(Graph* graph, BfsVertex* start, List* hops)
 
             if (clr_vertex->color == VERTEX_WHITE) {
                 clr_vertex->color = VERTEX_GRAY;
-                clr_vertex->hops = ((BfsVertex*)adj_list->vertex)->hops + 1;
 
                 if (queue_enqueue(&q, clr_adjst) != 0) {
                     queue_destroy(&q);
@@ -54,55 +53,47 @@ int bfs(Graph* graph, BfsVertex* start, List* hops)
         }
         if (queue_dequeue(&q, (void**)&adj_list) == 0) {
             ((BfsVertex*)(adj_list->vertex))->color = VERTEX_BLACK;
+            if (list_ins_next(list_res, list_tail(list_res), adj_list->vertex) != 0) {
+                queue_destroy(&q);
+                list_destroy(list_res);
+                return -1;
+            }
         } else {
             queue_destroy(&q);
             return -1;
         }
     }
     queue_destroy(&q);
-
-    list_create(hops, graph->match, graph->destroy);
-    for (member = list_head(&graph_adjlists(graph)); member != NULL; member = list_next(member)) {
-        clr_vertex = (BfsVertex*)((AdjList*)list_data(member))->vertex;
-        if (clr_vertex->hops != -1) {
-            if (list_ins_next(hops, list_tail(hops), clr_vertex) != 0) {
-                list_destroy(hops);
-                return -1;
-            }
-        }
-    }
-    list_tail(hops)->next = NULL;
     return 0;
 }
 
-static int dfs_main(Graph* graph, AdjList* list, List* ordered)
+static int dfs_main(Graph* graph, AdjList* adjlist, List* ordered)
 {
     ListNode* member;
 
     DfsVertex *adj_vertex, *clr_vertex;
 
-    AdjList* adj_list;
+    AdjList* clr_adj;
 
-    ((DfsVertex*)list->vertex)->color = VERTEX_GRAY;
-    for (member = list_head(&list->adjacent); member != NULL; member = list_next(member)) {
+    ((DfsVertex*)adjlist->vertex)->color = VERTEX_GRAY;
+    for (member = list_head(&adjlist->adjacent); member != NULL; member = list_next(member)) {
         adj_vertex = list_data(member);
-        if (graph_adjlist(graph, adj_vertex, &adj_list) != 0) {
+        if (graph_adjlist(graph, adj_vertex, &clr_adj) != 0) {
             return -1;
         }
-        clr_vertex = adj_list->vertex;
+        clr_vertex = clr_adj->vertex;
 
         if (clr_vertex->color == VERTEX_WHITE) {
-            if (dfs_main(graph, list, ordered) != 0) {
+            if (dfs_main(graph, clr_adj, ordered) != 0) {
                 return -1;
             }
         }
+    }
 
-        ((DfsVertex*)adj_list->vertex)->color = VERTEX_BLACK;
+    ((DfsVertex*)adjlist->vertex)->color = VERTEX_BLACK;
 
-        if (list_ins_next(ordered, NULL, (DfsVertex*)adj_list->vertex) != 0) {
-            return -1;
-        }
-
+    if (list_ins_next(ordered, NULL, (DfsVertex*)adjlist->vertex) != 0) {
+        return -1;
     }
     return 0;
 }
@@ -116,7 +107,7 @@ int dfs(Graph* graph, List* ordered)
         vertex->color = VERTEX_WHITE;
     }
 
-    list_create(ordered, graph->match, graph->destroy);
+    list_create(ordered, graph->match, NULL);
     for (element = list_head(&graph_adjlists(graph)); element != NULL; element = list_next(element)) {
         vertex = ((AdjList*)list_data(element))->vertex;
         if (vertex->color == VERTEX_WHITE) {

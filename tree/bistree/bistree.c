@@ -108,7 +108,7 @@ static void left_destroy(BiTree* tree, BiTreeNode* node)
         }
     }
 
-    tree->destroy(*position);
+    free(*position);
     *position = NULL;
 
     tree->size--;
@@ -125,11 +125,6 @@ static void right_destroy(BiTree* tree, BiTreeNode* node)
         position = &bitree_root(tree);
     } else {
         position = &bitree_right(node);
-    }
-
-    if (*position != NULL) {
-        left_destroy(tree, *position);
-        right_destroy(tree, *position);
     }
 
     if (*position != NULL) {

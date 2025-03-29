@@ -17,11 +17,13 @@ void graph_destroy(Graph* g)
 {
     AdjList* adjlist;
     while (list_size(&g->adjlists) > 0) {
-        if (list_rem_next(&g->adjlists, NULL, (void**)&adjlist))
+        if (list_rem_next(&g->adjlists, NULL, (void**)&adjlist) == 0) {
             set_destroy(&adjlist->adjacent);
-        if (g->destroy) {
-            g->destroy(adjlist->vertex);
+            if (g->destroy) {
+                g->destroy(adjlist->vertex);
+            }
         }
+
         free(adjlist);
     }
     list_destroy(&g->adjlists);
@@ -42,7 +44,7 @@ int graph_ins_vertex(Graph* g, const void* data)
 
     AdjList* new_list = (AdjList*)malloc(sizeof(AdjList));
     new_list->vertex = (void*)data;
-    set_create(&new_list->adjacent, g->match, g->destroy);
+    set_create(&new_list->adjacent, g->match, NULL);
 
     if ((retval = list_ins_next(&g->adjlists, list_tail(&g->adjlists), new_list)) != 0) {
         return retval;

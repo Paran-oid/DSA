@@ -16,13 +16,11 @@ void list_create(List* list, int (*match)(const void* key1, const void* key2),
 }
 void list_destroy(List* list)
 {
-    ASSERT(list->destroy != NULL, "no destroy function assigned for list when passed to list");
-
     void* data;
 
     while (list_size(list) > 0) {
-        if (list_rem_next(list, NULL, (void**)&data) == 0) {
-            ;
+        if (list_rem_next(list, NULL, (void**)&data) == 0 && list->destroy) {
+            list->destroy(data);
         }
     }
 
@@ -82,7 +80,7 @@ int list_rem_next(List* list, ListNode* elem, void** data)
         }
     }
 
-    list->destroy(old_elem);
+    free(old_elem);
     list->size--;
     return 0;
 }

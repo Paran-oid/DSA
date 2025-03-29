@@ -19,14 +19,14 @@ void dlist_create(DList* dlist,
 
 void dlist_destroy(DList* dlist)
 {
-    ASSERT(dlist->destroy != NULL, "no destroy function assigned for list when passed to list");
-    if (dlist_size(dlist) == 0)
+    if (dlist_size(dlist) == 0) {
         return;
+    }
 
     void* data;
 
     while (dlist_size(dlist) != 0) {
-        if (dlist_rem(dlist, dlist->tail, (void**)&data) == 0) {
+        if (dlist_rem(dlist, dlist->tail, (void**)&data) == 0 && dlist->destroy) {
             dlist->destroy(data);
         }
     }
@@ -117,7 +117,7 @@ int dlist_rem(DList* dlist, DListNode* elem, void** data)
     }
 
     *data = elem->data;
-    dlist->destroy(elem);
+    free(elem);
     dlist->size--;
     return 0;
 }

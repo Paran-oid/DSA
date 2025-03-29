@@ -94,7 +94,7 @@ int bitree_rem_left(BiTree* bt, BiTreeNode* node)
         }
     }
 
-    bt->destroy(*pos);
+    free(*pos);
 
     *pos = NULL;
     bt->size--;
@@ -121,7 +121,7 @@ int bitree_rem_right(BiTree* bt, BiTreeNode* node)
             bt->destroy((*pos)->data);
         }
     }
-    bt->destroy(*pos);
+    free(*pos);
     *pos = NULL;
 
     bt->size--;
