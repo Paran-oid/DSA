@@ -79,7 +79,7 @@ int graph_ins_edge(Graph* g, const void* data1, const void* data2)
         return -1;
     }
 
-    if ((retval = set_insert(&curr1_list->adjacent, data2)) != 0) {
+    if ((retval = set_insert(&((AdjList*)list_data(curr1))->adjacent, data2)) != 0) {
         return retval;
     }
 

@@ -12,7 +12,7 @@ int mist(Graph* g, const MstVertex* start, List* span, int (*match)(const void*,
     int found = 0;
     for (curr = list_head(&g->adjlists); curr != NULL; curr = list_next(curr)) {
         vertex = ((AdjList*)list_data(curr))->vertex;
-        if (match(vertex, start)) {
+        if (match(vertex, start) == 0) {
             vertex->key = 0;
             vertex->color = VERTEX_WHITE;
             vertex->parent = NULL;
@@ -27,6 +27,7 @@ int mist(Graph* g, const MstVertex* start, List* span, int (*match)(const void*,
         return -1;
     }
     int i = 0;
+    curr = NULL;
     double min;
     while (i < (int)graph_vcount(g)) {
         min = DBL_MAX;
@@ -37,17 +38,14 @@ int mist(Graph* g, const MstVertex* start, List* span, int (*match)(const void*,
                 list = list_data(curr);
             }
         }
-
-        if (list) {
-            ((MstVertex*)list->vertex)->color = VERTEX_BLACK;
-        }
-
+        curr = NULL;
+        ((MstVertex*)list->vertex)->color = VERTEX_BLACK;
         for (curr = list_head(&list->adjacent); curr != NULL; curr = list_next(curr)) {
             adj_vertex = list_data(curr);
             for (element = list_head(&g->adjlists); element != NULL; element = list_next(element)) {
                 vertex = ((AdjList*)list_data(element))->vertex;
-                if (match(vertex, adj_vertex)) {
-                    if (vertex->color == VERTEX_WHITE && vertex->weight < adj_vertex->key) {
+                if (match(vertex, adj_vertex) == 0) {
+                    if (vertex->color == VERTEX_WHITE && adj_vertex->weight < vertex->key) {
                         vertex->key = adj_vertex->weight;
                         vertex->parent = list->vertex;
                     }
@@ -55,11 +53,10 @@ int mist(Graph* g, const MstVertex* start, List* span, int (*match)(const void*,
                 }
             }
         }
-
         i++;
     }
 
-    list_create(span, match, free);
+    list_create(span, match, NULL);
     for (element = list_head(&g->adjlists); element != NULL; element = list_next(element)) {
         vertex = ((AdjList*)list_data(element))->vertex;
         if (vertex->color == VERTEX_BLACK) {
