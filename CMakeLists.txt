@@ -23,8 +23,8 @@ set(SRC
   tree/bistree/bistree.c
   tree/heap/heap.c
   graph/graph.c
-  graph/graph_traversal.c
-  graph/graph_algorithms.c
+  algorithms/graph_traversal.c
+  algorithms/graph_algorithms.c
   algorithms/sorting.c
   main.c
   )
