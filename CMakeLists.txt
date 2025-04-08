@@ -9,8 +9,8 @@ set(SRC
   linear/queue/queue.c
   linear/stack/stack.c
   linear/set/set.c
+  linear/vector/vector.c
   hash/hashtable/hashtable.c
-  hash/pair/pair.c
   tree/btree/btree.c
   tree/bistree/bistree.c
   tree/heap/heap.c
@@ -18,6 +18,8 @@ set(SRC
   algorithms/graph_traversal.c
   algorithms/graph_algorithms.c
   algorithms/sorting.c
+  hash/dictionary/dictionary.c
+  main.c
   )
 
 set(INCLUDE_DIR
@@ -25,6 +27,7 @@ set(INCLUDE_DIR
   linear/queue
   linear/set
   linear/stack
+  linear/vector
   "linked list/list"
   "linked list/clist"
   "linked list/dlist"
@@ -32,12 +35,14 @@ set(INCLUDE_DIR
   tree/bistree
   tree/btree
   tree/heap
-  hash/pair
+  hash/dictionary
   algorithms
   graph)
 
-add_library(DSA ${SRC})
+add_executable(DSA ${SRC})
 
 target_include_directories(DSA PUBLIC ${INCLUDE_DIR})
+
+
 target_link_libraries(DSA PRIVATE m)
 

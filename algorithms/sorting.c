@@ -65,8 +65,8 @@ static int merge(void* arr, size_t esize, int start, int mid, int end, int (*com
     n1 = mid - start + 1;
     n2 = end - mid;
 
-    void* arr1 = malloc(n1 * esize);
-    void* arr2 = malloc(n2 * esize);
+    void* arr1 = calloc(n1, esize);
+    void* arr2 = calloc(n2, esize);
 
     if (!arr1 || !arr2) {
         free(arr1);
@@ -129,11 +129,11 @@ int counting_sort(int* arr, size_t size, size_t k)
     int* arr_count;
     int* arr_temp;
 
-    if ((arr_count = malloc(sizeof(int) * k)) == NULL) {
+    if ((arr_count = calloc(k, sizeof(int))) == NULL) {
         return -1;
     }
 
-    if ((arr_temp = malloc(sizeof(int) * size)) == NULL) {
+    if ((arr_temp = calloc(size, sizeof(int))) == NULL) {
         free(arr_count);
         return -1;
     }
@@ -166,11 +166,11 @@ int radix_sort(int* arr, size_t size, int p, int k)
     int* temp;
     int* counts;
 
-    if ((counts = malloc(sizeof(int) * k)) == NULL) {
+    if ((counts = calloc(k, sizeof(int))) == NULL) {
         return -1;
     }
 
-    if ((temp = malloc(sizeof(int) * size)) == NULL) {
+    if ((temp = calloc(size, sizeof(int))) == NULL) {
         return -1;
     }
 

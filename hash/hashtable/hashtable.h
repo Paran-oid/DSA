@@ -1,7 +1,6 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-#include "pair.h"
 #include <list.h>
 #include <stddef.h>
 
@@ -11,8 +10,7 @@ typedef struct HashTable_ {
     int buckets;
 
     size_t size;
-    size_t item_size;
-
+    
     int (*hash)(const void* key);
     int (*match)(const void* key1, const void* key2);
     void (*destroy)(void* key);
@@ -27,16 +25,5 @@ int ht_remove(HashTable* ht, void** data);
 int ht_get(const HashTable* ht, void** data);
 
 #define ht_size(ht) ((ht)->size)
-
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-/***************************************** Dictionary Behaivour *******************************************************/
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-
-int ht_get_value(const HashTable* ht, const void* key, void** val);
-int ht_set(HashTable* ht, const Pair* pair);
-int ht_remove_key(HashTable* ht, const void* key, void** data);
 
 #endif

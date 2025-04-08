@@ -7,7 +7,6 @@
 void list_create(List* list, int (*match)(const void* key1, const void* key2),
     void (*destroy)(void*))
 {
-
     list->destroy = destroy;
     list->match = match;
 
