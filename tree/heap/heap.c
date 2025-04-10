@@ -43,7 +43,7 @@ int heap_insert(Heap* heap, const void* data)
 
     heap->tree[heap_size(heap)] = (void*)data;
 
-    ipos = heap_size(heap);
+    ipos = (int)heap_size(heap);
     ppos = heap_parent(ipos);
 
     while (ipos > 0 && heap->match(heap->tree[ppos], heap->tree[ipos]) < 0) {

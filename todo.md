@@ -1,5 +1,2 @@
--   Create hashset datastructure (more efficent)
--   Make pair integrate well with hashse
 -   Implement an Arena datatype
--   Implement some kind of vector datastructure
 -   See other features in other languages to implement

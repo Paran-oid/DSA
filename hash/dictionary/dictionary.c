@@ -43,7 +43,7 @@ void dict_destroy(Dictionary* dict)
     list_destroy(dict->table);
 }
 
-int dict_get_value(const HashTable* dict, const char* key, char** val)
+int dict_get_value(const HashSet* dict, const char* key, char** val)
 {
     ListNode* curr;
     int bucket = dict->hash(key) % dict->buckets;
@@ -59,7 +59,7 @@ int dict_get_value(const HashTable* dict, const char* key, char** val)
     return -1;
 }
 
-int dict_set(HashTable* dict, const char* key, const char* val)
+int dict_set(HashSet* dict, const char* key, const char* val)
 {
     int res_val;
     Pair* data;
@@ -70,7 +70,7 @@ int dict_set(HashTable* dict, const char* key, const char* val)
         for (ListNode* curr = list_head(&dict->table[bucket]); curr != NULL; curr = list_next(curr)) {
             void* found_key = ((Pair*)(curr->data))->key;
             if (dict->match(key, found_key)) {
-                ((Pair*)curr->data)->val = val;
+                ((Pair*)curr->data)->val = (char*)val;
                 return 0;
             }
         }
@@ -96,7 +96,7 @@ int dict_set(HashTable* dict, const char* key, const char* val)
     return res_val;
 }
 
-int dict_remove_key(HashTable* dict, const char* key, char** data)
+int dict_remove_key(HashSet* dict, const char* key, void** data)
 {
     int bucket;
     ListNode* curr;
@@ -107,7 +107,7 @@ int dict_remove_key(HashTable* dict, const char* key, char** data)
         void* found_key = ((Pair*)(curr->data))->key;
         if (dict->match(found_key, key)) {
             if ((list_rem_next(&dict->table[bucket], NULL, (void**)data)) == 0) {
-                *data = ((Pair*)*data)->val;
+                *data = (((Pair*)*data)->val);
                 dict->size--;
                 return 0;
             } else {

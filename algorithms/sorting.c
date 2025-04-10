@@ -15,12 +15,12 @@ int insertion_sort(void* data, size_t size, size_t esize, int (*compare)(const v
 
     for (int i = 1; i < (int)size; i++) {
         int j = i - 1;
-        memcpy(temp, &arr[i * esize], esize);
-        while (j >= 0 && compare(&arr[j * esize], temp) > 0) {
-            memcpy(&arr[(j + 1) * esize], &arr[j * esize], esize);
+        memcpy(temp, &arr[(size_t)i * esize], esize);
+        while (j >= 0 && compare(&arr[j * (int)esize], temp) > 0) {
+            memcpy(&arr[(j + 1) * (int)esize], &arr[j * (int)esize], esize);
             j--;
         }
-        memcpy(&arr[(j + 1) * esize], temp, esize);
+        memcpy(&arr[(j + 1) * (int)esize], temp, esize);
     }
     free(temp);
     return 0;
@@ -38,13 +38,13 @@ static int quick_sort_pivot(void* data, size_t esize, int left, int right, int (
     }
 
     for (int j = left; j < pivot; j++) {
-        if (comp(&arr[j * esize], &arr[right * esize]) > 0) {
+        if (comp(&arr[j * (int)esize], &arr[right * (int)esize]) > 0) {
             i++;
-            swap(&arr[j * esize], &arr[i * esize], esize);
+            swap(&arr[j * (int)esize], &arr[i * (int)esize], esize);
         }
     }
 
-    swap(&arr[(i + 1) * esize], &arr[right * esize], esize);
+    swap(&arr[(i + 1) * (int)esize], &arr[right * (int)esize], esize);
     free(temp);
 
     return i + 1;
@@ -62,8 +62,8 @@ int quick_sort(void* data, size_t size, size_t esize, int left, int right, int (
 static int merge(void* arr, size_t esize, int start, int mid, int end, int (*comp)(const void*, const void*))
 {
     size_t n1, n2;
-    n1 = mid - start + 1;
-    n2 = end - mid;
+    n1 = (size_t)(mid - start + 1);
+    n2 = (size_t)(end - mid);
 
     void* arr1 = calloc(n1, esize);
     void* arr2 = calloc(n2, esize);
@@ -75,15 +75,15 @@ static int merge(void* arr, size_t esize, int start, int mid, int end, int (*com
     }
 
     for (size_t i = 0; i < n1; i++) {
-        memcpy((char*)arr1 + i * esize, (char*)arr + (start + i) * esize, esize);
+        memcpy((char*)arr1 + i * esize, (char*)arr + ((size_t)start + i) * esize, esize);
     }
 
     for (size_t j = 0; j < n2; j++) {
-        memcpy((char*)arr2 + j * esize, (char*)arr + (mid + j + 1) * esize, esize);
+        memcpy((char*)arr2 + j * esize, (char*)arr + ((size_t)mid + j + 1) * esize, esize);
     }
 
-    int l = 0, r = 0, k = start;
-    while (l < (int)n1 && r < (int)n2) {
+    size_t l = 0, r = 0, k = (size_t)start;
+    while (l < n1 && r < n2) {
         if (comp((char*)arr1 + l * esize, (char*)arr2 + r * esize) <= 0) {
             memcpy((char*)arr + k * esize, (char*)arr1 + l * esize, esize);
             l++;
@@ -94,14 +94,14 @@ static int merge(void* arr, size_t esize, int start, int mid, int end, int (*com
         k++;
     }
 
-    while (l < (int)n1) {
+    while (l < n1) {
         memcpy((char*)arr + k * esize, (char*)arr1 + l * esize, esize);
         l++;
         k++;
     }
 
-    while (r < (int)n2) {
-        memcpy((char*)arr + k * esize, arr2 + r * esize, esize);
+    while (r < n2) {
+        memcpy((char*)arr + k * esize, (char*)arr2 + r * esize, esize);
         r++;
         k++;
     }
@@ -150,7 +150,7 @@ int counting_sort(int* arr, size_t size, size_t k)
         arr_count[i] += arr_count[i - 1];
     }
 
-    for (int j = size - 1; j >= 0; j--) {
+    for (int j = (int)size - 1; j >= 0; j--) {
         arr_temp[arr_count[arr[j]] - 1] = arr[j];
         arr_count[arr[j]] = arr_count[arr[j]] - 1;
     }
@@ -166,7 +166,7 @@ int radix_sort(int* arr, size_t size, int p, int k)
     int* temp;
     int* counts;
 
-    if ((counts = calloc(k, sizeof(int))) == NULL) {
+    if ((counts = calloc((size_t)k, sizeof(int))) == NULL) {
         return -1;
     }
 
@@ -189,7 +189,7 @@ int radix_sort(int* arr, size_t size, int p, int k)
             counts[i] = counts[i] + counts[i - 1];
         }
 
-        for (int j = size - 1; j >= 0; j--) {
+        for (int j = (int)size - 1; j >= 0; j--) {
             int index = (int)(arr[j] / pval) % k;
             temp[counts[index] - 1] = arr[j];
             counts[index]--;
