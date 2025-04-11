@@ -15,8 +15,8 @@ typedef struct Pair_ {
 void dict_create(Dictionary* dict, void (*destroy)(void* key));
 void dict_destroy(Dictionary* dict);
 
-int dict_get_value(const HashSet* ht, const char* key, char** data);
-int dict_set(HashSet* ht, const char* key, const char* val);
-int dict_remove_key(HashSet* ht, const char* key, void** data);
+int dict_get_value(const Dictionary* ht, const char* key, char** data);
+int dict_set(Dictionary* ht, const char* key, const char* val);
+int dict_remove_key(Dictionary* ht, const char* key, void** data);
 
 #endif
