@@ -19,7 +19,8 @@ set(SRC
   algorithms/graph_algorithms.c
   algorithms/sorting.c
   hash/dictionary/dictionary.c
-  arena/arena.c
+  memory/arena/arena.c
+  memory/objpool/objpool.c
   )
 
 set(INCLUDE_DIR
@@ -37,8 +38,10 @@ set(INCLUDE_DIR
   tree/heap
   hash/dictionary
   algorithms
-  arena
-  graph)
+  memory/arena
+  memory/objpool
+  graph
+)
 
 add_library(DSA ${SRC})
 
