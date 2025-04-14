@@ -22,7 +22,7 @@ void ht_destroy(HashSet* ht);
 
 int ht_insert(HashSet* ht, const void* data);
 int ht_remove(HashSet* ht, void** data);
-int ht_get(const HashSet* ht, void** data);
+int ht_get(const HashSet* ht, void* val, void** data);
 
 #define ht_size(ht) ((ht)->size)
 

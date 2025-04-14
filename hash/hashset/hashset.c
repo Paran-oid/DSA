@@ -35,7 +35,7 @@ int ht_insert(HashSet* ht, const void* data)
     void* temp;
 
     temp = (void*)data;
-    if (ht_get(ht, &temp) == 0) {
+    if (ht_get(ht, temp, NULL) == 0) {
         return 1;
     }
     int bucket = ht->hash(data) % ht->buckets;
@@ -67,13 +67,13 @@ int ht_remove(HashSet* ht, void** data)
     return -1;
 }
 
-int ht_get(const HashSet* ht, void** data)
+int ht_get(const HashSet* ht, void* val, void** data)
 {
     ListNode* curr;
-    int bucket = ht->hash(*data) % ht->buckets;
+    int bucket = ht->hash(val) % ht->buckets;
 
     for (curr = list_head(&ht->table[bucket]); curr != NULL; curr = list_next(curr)) {
-        if (ht->match(*data, list_data(curr))) {
+        if (ht->match(val, list_data(curr))) {
             *data = list_data(curr);
             return 0;
         }
