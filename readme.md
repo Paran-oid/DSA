@@ -22,11 +22,13 @@ Library specifically made to provide abstract datastructures and some algorithms
 3. destroy the datastructure
 
 `
-Set set;
-set_create(&set, your_match_func, your_destroy_function);
 
-// Do Something
+    Set set;
+    set_create(&set, your_match_func, your_destroy_function);
 
-set_destroy(&set);
+    // Do Something
+
+    set_destroy(&set);
+
 
 `
