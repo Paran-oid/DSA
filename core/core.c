@@ -1,4 +1,7 @@
 #include "core.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void swap(void* key1, void* key2, size_t item_size)
