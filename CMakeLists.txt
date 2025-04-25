@@ -21,6 +21,7 @@ set(SRC
   hash/dictionary/dictionary.c
   memory/arena/arena.c
   memory/objpool/objpool.c
+  tree/trie/trie.c
   )
 
 set(INCLUDE_DIR
@@ -36,6 +37,7 @@ set(INCLUDE_DIR
   tree/bistree
   tree/btree
   tree/heap
+  tree/trie
   hash/dictionary
   algorithms
   memory/arena
