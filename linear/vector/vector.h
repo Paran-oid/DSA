@@ -3,6 +3,10 @@
 
 #include <stddef.h>
 
+/*
+        Just a replica of C++ vector
+*/
+
 // TODO: tweak this value
 #define CAPACITY_INIT 5
 
@@ -17,7 +21,8 @@ typedef struct Vector_ {
     size_t capacity;
 } Vector;
 
-void vector_create(Vector* vec, size_t el_size, void (*destroy)(void*), int (*match)(const void*, const void*));
+void vector_create(Vector* vec, size_t el_size, void (*destroy)(void*),
+                   int (*match)(const void*, const void*));
 void vector_destroy(Vector* vec);
 
 int vector_get(Vector* vec, size_t index, void** out);

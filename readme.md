@@ -4,16 +4,16 @@ Library specifically made to provide abstract datastructures and some algorithms
 
 ## Content
 
--   Graphs
--   Hashsets
--   Dictionaries(HashTables)
--   Dynamic Arrays
--   Linked Lists
--   Stacks
--   Queues
--   Trees
--   Priority Queues and Heaps
--   MISC memory related functionalities
+- Graphs
+- Hashsets
+- Dictionaries(HashTables)
+- Dynamic Arrays
+- Linked Lists
+- Stacks
+- Queues
+- Trees
+- Priority Queues and Heaps
+- MISC memory related functionalities
 
 ## General Structure
 
@@ -29,6 +29,3 @@ Library specifically made to provide abstract datastructures and some algorithms
     // Do Something
 
     set_destroy(&set);
-
-
-`

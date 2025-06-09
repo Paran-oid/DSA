@@ -25,17 +25,17 @@ int set_rem(Set* set, void** data)
     return list_rem_next(set, prev, data);
 }
 
-int set_union(Set* seti, const Set* set1, const Set* set2)
+int set_union(Set* set_res, const Set* set1, const Set* set2)
 {
     ListNode* curr;
     void* data;
 
-    set_create(seti, set1->match, set1->destroy);
+    set_create(set_res, set1->match, set1->destroy);
 
     for (curr = list_head(set1); curr != NULL; curr = list_next(curr)) {
         data = list_data(curr);
-        if (list_ins_next(seti, list_tail(seti), data) != 0) {
-            set_destroy(seti);
+        if (list_ins_next(set_res, list_tail(set_res), data) != 0) {
+            set_destroy(set_res);
             return -1;
         }
     }
@@ -45,8 +45,8 @@ int set_union(Set* seti, const Set* set1, const Set* set2)
         if (set_is_member(set1, data)) {
             continue;
         } else {
-            if (list_ins_next(seti, list_tail(seti), data) != 0) {
-                set_destroy(seti);
+            if (list_ins_next(set_res, list_tail(set_res), data) != 0) {
+                set_destroy(set_res);
                 return -1;
             }
         }
@@ -55,20 +55,20 @@ int set_union(Set* seti, const Set* set1, const Set* set2)
     return 0;
 }
 
-int set_intersection(Set* seti, const Set* set1, const Set* set2)
+int set_intersection(Set* set_res, const Set* set1, const Set* set2)
 {
     ListNode* curr;
     void* data;
 
-    set_create(seti, set1->match, set1->destroy);
+    set_create(set_res, set1->match, set1->destroy);
 
     for (curr = list_head(set1); curr != NULL; curr = list_next(curr)) {
         data = list_data(curr);
         if (set_is_member(set2, data) == 0) {
             continue;
         } else {
-            if (list_ins_next(seti, list_head(seti), data) != 0) {
-                set_destroy(seti);
+            if (list_ins_next(set_res, list_head(set_res), data) != 0) {
+                set_destroy(set_res);
                 return -1;
             }
         }
@@ -77,9 +77,9 @@ int set_intersection(Set* seti, const Set* set1, const Set* set2)
     return 0;
 }
 
-int set_difference(Set* seti, const Set* set_comp_from, const Set* set_comp_to)
+int set_difference(Set* set_res, const Set* set_comp_from, const Set* set_comp_to)
 {
-    set_create(seti, set_comp_from->match, set_comp_to->destroy);
+    set_create(set_res, set_comp_from->match, set_comp_to->destroy);
 
     ListNode* curr;
     void* data;
@@ -89,8 +89,8 @@ int set_difference(Set* seti, const Set* set_comp_from, const Set* set_comp_to)
         if (set_is_member(set_comp_to, data) != 0) {
             continue;
         } else {
-            if (list_ins_next(seti, list_tail(seti), data) != 0) {
-                list_destroy(seti);
+            if (list_ins_next(set_res, list_tail(set_res), data) != 0) {
+                list_destroy(set_res);
                 return -1;
             }
         }

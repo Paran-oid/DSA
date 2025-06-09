@@ -1,24 +1,18 @@
 #include "dlist.h"
-#include "core.h"
 
 #include <stdlib.h>
 #include <string.h>
 
 void dlist_create(DList* dlist,
-    int (*match)(const void* key1, const void* key2),
-    void (*destroy)(void* key))
-{
-
-    ASSERT(dlist != NULL, "null list passed to clist_create");
-
+                  int (*match)(const void* key1, const void* key2),
+                  void (*destroy)(void* key)) {
     dlist->destroy = destroy;
     dlist->match = match;
     dlist->head = dlist->tail = NULL;
     dlist->size = 0;
 }
 
-void dlist_destroy(DList* dlist)
-{
+void dlist_destroy(DList* dlist) {
     if (dlist_size(dlist) == 0) {
         return;
     }
@@ -26,7 +20,8 @@ void dlist_destroy(DList* dlist)
     void* data;
 
     while (dlist_size(dlist) != 0) {
-        if (dlist_rem(dlist, dlist->tail, (void**)&data) == 0 && dlist->destroy) {
+        if (dlist_rem(dlist, dlist->tail, (void**)&data) == 0 &&
+            dlist->destroy) {
             dlist->destroy(data);
         }
     }
@@ -35,15 +30,11 @@ void dlist_destroy(DList* dlist)
     return;
 }
 
-int dlist_ins_next(DList* dlist, DListNode* elem, const void* data)
-{
-
-    if (dlist_size(dlist) != 0 && elem == NULL)
-        return -1;
+int dlist_ins_next(DList* dlist, DListNode* elem, const void* data) {
+    if (dlist_size(dlist) != 0 && elem == NULL) return -1;
 
     DListNode* newElem;
-    if ((newElem = malloc(sizeof(DListNode))) == NULL)
-        return -1;
+    if ((newElem = malloc(sizeof(DListNode))) == NULL) return -1;
 
     newElem->data = (void*)data;
 
@@ -66,15 +57,12 @@ int dlist_ins_next(DList* dlist, DListNode* elem, const void* data)
 
     return 0;
 }
-int dlist_ins_prev(DList* dlist, DListNode* elem, const void* data)
-{
-    if (!elem && dlist_size(dlist) != 0)
-        return -1;
+int dlist_ins_prev(DList* dlist, DListNode* elem, const void* data) {
+    if (!elem && dlist_size(dlist) != 0) return -1;
 
     DListNode* newElem;
 
-    if ((newElem = malloc(sizeof(DListNode))) == NULL)
-        return -1;
+    if ((newElem = malloc(sizeof(DListNode))) == NULL) return -1;
 
     newElem->data = (void*)data;
     if (dlist_size(dlist) == 0) {
@@ -95,10 +83,8 @@ int dlist_ins_prev(DList* dlist, DListNode* elem, const void* data)
     return 0;
 }
 
-int dlist_rem(DList* dlist, DListNode* elem, void** data)
-{
-    if (dlist_size(dlist) == 0)
-        return -1;
+int dlist_rem(DList* dlist, DListNode* elem, void** data) {
+    if (dlist_size(dlist) == 0) return -1;
 
     if (elem == dlist->head) {
         dlist->head = elem->next;

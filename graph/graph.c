@@ -1,20 +1,23 @@
 #include "graph.h"
-#include "list.h"
-#include "set.h"
+
 #include <stdlib.h>
 #include <string.h>
 
-void graph_create(Graph* g, int (*match)(const void*, const void*), void (*destroy)(void*))
-{
+#include "list.h"
+#include "set.h"
+
+void graph_create(Graph* g, int (*match)(const void*, const void*),
+                  void (*destroy)(void*)) {
     g->match = match;
     g->destroy = destroy;
-
     g->ecount = g->vcount = 0;
 
     list_create(&g->adjlists, match, destroy);
 }
-void graph_destroy(Graph* g)
-{
+void graph_destroy(Graph* g) {
+    if (!g) {
+        return -1;
+    }
     AdjList* adjlist;
     while (list_size(&g->adjlists) > 0) {
         if (list_rem_next(&g->adjlists, NULL, (void**)&adjlist) == 0) {
@@ -30,12 +33,12 @@ void graph_destroy(Graph* g)
     memset(g, 0, sizeof(Graph));
 }
 
-int graph_ins_vertex(Graph* g, const void* data)
-{
+int graph_ins_vertex(Graph* g, const void* data) {
     ListNode* curr1;
     AdjList* curr1_list;
     int retval;
-    for (curr1 = list_head(&g->adjlists); curr1 != NULL; curr1 = list_next(curr1)) {
+    for (curr1 = list_head(&g->adjlists); curr1 != NULL;
+         curr1 = list_next(curr1)) {
         curr1_list = (AdjList*)list_data(curr1);
         if (g->match(data, curr1_list->vertex) == 0) {
             return 1;
@@ -46,19 +49,20 @@ int graph_ins_vertex(Graph* g, const void* data)
     new_list->vertex = (void*)data;
     set_create(&new_list->adjacent, g->match, NULL);
 
-    if ((retval = list_ins_next(&g->adjlists, list_tail(&g->adjlists), new_list)) != 0) {
+    if ((retval = list_ins_next(&g->adjlists, list_tail(&g->adjlists),
+                                new_list)) != 0) {
         return retval;
     }
 
     g->vcount++;
     return 0;
 }
-int graph_ins_edge(Graph* g, const void* data1, const void* data2)
-{
+int graph_ins_edge(Graph* g, const void* data1, const void* data2) {
     AdjList *curr1_list, *curr2_list;
     ListNode *curr1, *curr2;
     int retval;
-    for (curr1 = list_head(&g->adjlists); curr1 != NULL; curr1 = list_next(curr1)) {
+    for (curr1 = list_head(&g->adjlists); curr1 != NULL;
+         curr1 = list_next(curr1)) {
         curr1_list = (AdjList*)list_data(curr1);
         if (g->match(data1, curr1_list->vertex) == 0) {
             break;
@@ -68,7 +72,8 @@ int graph_ins_edge(Graph* g, const void* data1, const void* data2)
         return -1;
     }
 
-    for (curr2 = list_head(&g->adjlists); curr2 != NULL; curr2 = list_next(curr2)) {
+    for (curr2 = list_head(&g->adjlists); curr2 != NULL;
+         curr2 = list_next(curr2)) {
         curr2_list = (AdjList*)list_data(curr2);
         if (g->match(data2, curr2_list->vertex) == 0) {
             break;
@@ -79,7 +84,8 @@ int graph_ins_edge(Graph* g, const void* data1, const void* data2)
         return -1;
     }
 
-    if ((retval = set_insert(&((AdjList*)list_data(curr1))->adjacent, data2)) != 0) {
+    if ((retval = set_insert(&((AdjList*)list_data(curr1))->adjacent, data2)) !=
+        0) {
         return retval;
     }
 
@@ -87,13 +93,13 @@ int graph_ins_edge(Graph* g, const void* data1, const void* data2)
 
     return 0;
 }
-int graph_rem_vertex(Graph* g, void** data)
-{
+int graph_rem_vertex(Graph* g, void** data) {
     ListNode *curr, *prev;
     AdjList* curr_list;
     int found = 0, retval;
     for (curr = list_head(&g->adjlists); curr != NULL; curr = list_next(curr)) {
         curr_list = (AdjList*)list_data(curr);
+        // if it's a part of adjacency list of a vertex return -1
         if (set_is_member((const Set*)&curr_list->adjacent, *data) == 0) {
             return -1;
         }
@@ -125,8 +131,7 @@ int graph_rem_vertex(Graph* g, void** data)
     return 0;
 }
 
-int graph_rem_edge(Graph* g, const void* data1, void** data2)
-{
+int graph_rem_edge(Graph* g, const void* data1, void** data2) {
     ListNode* curr;
     AdjList* curr_list;
 
@@ -147,8 +152,7 @@ int graph_rem_edge(Graph* g, const void* data1, void** data2)
     g->ecount--;
     return 0;
 }
-int graph_adjlist(const Graph* g, const void* data, AdjList** adjlist)
-{
+int graph_adjlist(const Graph* g, const void* data, AdjList** adjlist) {
     ListNode* curr;
     AdjList* curr_list;
 
@@ -165,8 +169,7 @@ int graph_adjlist(const Graph* g, const void* data, AdjList** adjlist)
     *adjlist = curr_list;
     return 0;
 }
-int graph_is_adjacent(const Graph* g, const void* data1, const void* data2)
-{
+int graph_is_adjacent(const Graph* g, const void* data1, const void* data2) {
     ListNode* curr;
     AdjList* curr_list;
 

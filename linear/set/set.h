@@ -11,9 +11,10 @@ typedef List Set;
 int set_insert(Set* set, const void* data);
 int set_rem(Set* set, void** data);
 
-int set_union(Set* seti, const Set* set1, const Set* set2);
-int set_intersection(Set* seti, const Set* set1, const Set* set2);
-int set_difference(Set* seti, const Set* set_comp_from, const Set* set_comp_to);
+int set_union(Set* set_res, const Set* set1, const Set* set2);
+int set_intersection(Set* set_res, const Set* set1, const Set* set2);
+int set_difference(Set* set_res, const Set* set_comp_from,
+                   const Set* set_comp_to);
 int set_is_member(const Set* set_dest, const void* item);
 int set_is_subset(const Set* set_comp_from, const Set* set_comp_to);
 int set_is_equal(const Set* set1, const Set* set2);
