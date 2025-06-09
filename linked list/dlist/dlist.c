@@ -22,7 +22,9 @@ void dlist_destroy(DList* dlist) {
     while (dlist_size(dlist) != 0) {
         if (dlist_rem(dlist, dlist->tail, (void**)&data) == 0 &&
             dlist->destroy) {
-            dlist->destroy(data);
+            if (dlist->destroy) {
+                dlist->destroy(data);
+            }
         }
     }
 
